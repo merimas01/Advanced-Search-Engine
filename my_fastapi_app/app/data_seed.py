@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from utils.file_to_base64 import image_to_base64
 from db.database import SessionLocal 
 from models import (
     Category,
