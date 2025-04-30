@@ -1,0 +1,109 @@
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import desc
+from sqlalchemy.orm import Session, joinedload
+from app.db.database import get_db
+from app.models.generated_models import Product, SearchHistory
+from app.schemas.schemas import ProductOut, SearchHistoryOut
+
+router = APIRouter()
+
+
+# Get all products
+@router.get("/products", response_model=List[ProductOut])
+def get_products(db: Session = Depends(get_db)):
+    products = (
+        db.query(Product)
+        .options(
+            joinedload(Product.SubCategory),
+            joinedload(Product.ProductColor),
+            joinedload(Product.ProductBrand),
+            joinedload(Product.ProductImage),
+            joinedload(Product.ProductDepartment),
+        )
+        .all()
+    )
+    return products
+
+
+# Get product by ID
+@router.get("/products/{product_id}", response_model=ProductOut)
+def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
+    product = (
+        db.query(Product)
+        .options(
+            joinedload(Product.SubCategory),
+            joinedload(Product.ProductColor),
+            joinedload(Product.ProductBrand),
+            joinedload(Product.ProductImage),
+            joinedload(Product.ProductDepartment),
+        )
+        .filter(Product.ProductID == product_id)
+        .first()
+    )
+
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    return product
+
+
+# Delete product by ID
+@router.delete("/products/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.ProductID == product_id).first()
+
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    db.delete(product)
+    db.commit()
+
+    return {"message": "Product deleted successfully"}
+
+
+# Get all search_history
+@router.get("/searchHistory", response_model=List[SearchHistoryOut])
+def get_history(db: Session = Depends(get_db)):
+    history = (
+        db.query(SearchHistory)
+        .options(
+            joinedload(SearchHistory.Users),
+        )
+        .all()
+    )
+    return history
+
+
+# Get all search_history by UserID
+@router.get("/searchHistory/{user_id}")
+def get_search_history_by_userId(user_id: int, db: Session = Depends(get_db)):
+    history = (
+        db.query(SearchHistory)
+        .options(
+            joinedload(SearchHistory.Users),
+        )
+        .filter(SearchHistory.UserID == user_id)
+         .order_by(desc(SearchHistory.DateCreated))
+         .limit(10)
+        .all()
+    )
+
+    if not history:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    return history
+
+
+# Delete search_history by ID
+@router.delete("/searchHistory/{sh_id}")
+def delete_searchHistory(sh_id: int, db: Session = Depends(get_db)):
+    sh = db.query(SearchHistory).filter(SearchHistory.SearchHistoryID == sh_id).first()
+
+    if not sh:
+        raise HTTPException(status_code=404, detail="Not found")
+
+    db.delete(sh)
+    db.commit()
+
+    return {"message": "Object deleted successfully"}
