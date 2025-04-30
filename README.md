@@ -14,7 +14,7 @@ AdvancedSearchEngine is a project for my Bachelor thesis.
 
 - Clone the repository: https://github.com/merimas01/Advanced-Search-Engine.git 
 - Open terminal in the *my_fastapi_app* directory 
-![vsc](https://github.com/user-attachments/assets/80cc5073-9b32-4f6a-ada6-b702a095b16a)
+![fastapiapp](https://github.com/user-attachments/assets/ee8e6487-400c-4e61-810d-2fcf800dda35)
 - Run a following command to install dependencies: *pip install -r dependencies.txt*
 - Connect to a SQL Server with your credentials
 - Execute an ***advanced_search_engine_database.sql*** script to create a database
@@ -27,11 +27,10 @@ AdvancedSearchEngine is a project for my Bachelor thesis.
 ## Web application
 
 - Open terminal in the *my-app* directory
-
+![reactapp](https://github.com/user-attachments/assets/c9d92cb6-416b-4e18-8c01-0cf89e386a98)
 - Run following commands:
-- - npm install
-- - npm run dev
+  - npm install
+  - npm run dev
 - Open the application at: http://localhost:5173
 
-## Notes
 
