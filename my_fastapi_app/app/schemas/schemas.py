@@ -42,12 +42,20 @@ class ProductDepartmentOut(BaseModel):
     class Config:
         from_attributes = True
 
+class ProductLabelOut(BaseModel):
+    ProductLabelID: int
+    LabelName: str
+
+    class Config:
+        from_attributes = True
+
 
 class ProductOut(BaseModel):
     ProductID: int
     ProductName: str
     ProductCaption: str
     ProductPrice: Decimal
+    NewPrice: Optional[Decimal] = None
     DateCreated: datetime
 
     SubCategory: SubCategoryOut
@@ -55,6 +63,7 @@ class ProductOut(BaseModel):
     ProductBrand: ProductBrandOut
     ProductImage: ProductImageOut
     ProductDepartment: ProductDepartmentOut
+    ProductLabel: Optional[ProductLabelOut] = None
     ProductSize: List['ProductSizeOut']
 
     class Config:
@@ -97,3 +106,8 @@ class SearchHistoryOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SearchHistoryCreate(BaseModel):
+    SearchInput: str
+    UserID: int

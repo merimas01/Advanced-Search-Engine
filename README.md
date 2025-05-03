@@ -9,6 +9,7 @@ AdvancedSearchEngine is a project for my Bachelor thesis.
 - Visual Studio Code installed
 - Python Installed (version: 3.13.3)
 - Sql Server Management Studio
+- Node.js installed (version: v22.14.0)
 
 ## Setting up 
 

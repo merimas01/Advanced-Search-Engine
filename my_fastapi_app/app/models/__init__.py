@@ -6,6 +6,7 @@ from .generated_models import (
     ProductColor,
     ProductDepartment,
     ProductImage,
+    ProductLabel,
     Product,
     Size,
     ProductSize,

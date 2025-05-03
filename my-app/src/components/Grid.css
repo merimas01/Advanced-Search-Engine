@@ -1,0 +1,135 @@
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.product-card {
+  position: relative;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 10px;
+  height: 400px;
+  width: 230px;
+}
+
+.productImage{
+    height: 50%;
+    background-color: beige;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px; 
+}
+
+.product-image {
+  width: 100%;
+  height: 130px;
+  object-fit: contain;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 10px;
+}
+
+.search-container {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 600px;
+  height: 50px;
+}
+
+.search-icon {
+  width: 60px;
+  height: 25px;
+}
+
+.searchButton {
+  border: none;
+  background-color: transparent;
+  padding: 10px 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pagination-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-btn:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #ddd;
+}
+
+.page-number {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+.product-name {
+  text-align: center;
+}
+
+
+
+.productCaption{
+    text-align: center;
+}
+
+.productPrice {
+  width: 70px;
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  text-align: center;
+  font-weight: 700;
+  color: grey;
+}
+
+#newPrice{
+    color: red;
+}
+
+.crossedPrice{
+    position: absolute;
+    bottom: 2%;
+    right: 5%;
+}
+
+.productLabel{
+    position: absolute;
+    top:2%;
+    padding: 2%;
+    border-radius: 10%;
+    font-weight: 300;
+}
+
+#sale{
+    background-color: rgb(246, 134, 134);
+}
+
+#new{
+    background-color: rgb(255, 251, 127);
+}

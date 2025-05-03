@@ -1,13 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from '../screens/home';
-import About from '../screens/about';
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
+      {/* <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} /> */}
     </Routes>
   );
 }

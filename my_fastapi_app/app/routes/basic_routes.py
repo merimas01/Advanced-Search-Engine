@@ -4,7 +4,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
 from app.models.generated_models import Product, SearchHistory
-from app.schemas.schemas import ProductOut, SearchHistoryOut
+from app.schemas.schemas import ProductOut, SearchHistoryCreate, SearchHistoryOut
 
 router = APIRouter()
 
@@ -20,6 +20,7 @@ def get_products(db: Session = Depends(get_db)):
             joinedload(Product.ProductBrand),
             joinedload(Product.ProductImage),
             joinedload(Product.ProductDepartment),
+            joinedload(Product.ProductLabel)
         )
         .all()
     )
@@ -37,6 +38,7 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
             joinedload(Product.ProductBrand),
             joinedload(Product.ProductImage),
             joinedload(Product.ProductDepartment),
+            joinedload(Product.ProductLabel)
         )
         .filter(Product.ProductID == product_id)
         .first()
@@ -84,8 +86,8 @@ def get_search_history_by_userId(user_id: int, db: Session = Depends(get_db)):
             joinedload(SearchHistory.Users),
         )
         .filter(SearchHistory.UserID == user_id)
-         .order_by(desc(SearchHistory.DateCreated))
-         .limit(10)
+        .order_by(desc(SearchHistory.DateCreated))
+        .limit(10)
         .all()
     )
 
@@ -93,6 +95,19 @@ def get_search_history_by_userId(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="List not found")
 
     return history
+
+
+@router.post("/search-history")
+def create_search_history(
+    search_data: SearchHistoryCreate, db: Session = Depends(get_db)
+):
+    new_history = SearchHistory(
+        SearchInput=search_data.SearchInput, UserID=search_data.UserID
+    )
+    db.add(new_history)
+    db.commit()
+    db.refresh(new_history)
+    return new_history
 
 
 # Delete search_history by ID
