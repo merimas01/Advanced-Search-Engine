@@ -95,6 +95,7 @@ def get_search_history_by_userId(
         db.query(SearchHistory)
         .options(joinedload(SearchHistory.Users))
         .filter(SearchHistory.SearchHistoryID.in_(subquery))
+        .filter(func.trim(SearchHistory.SearchInput) != "")
     )
 
     if searchString:

@@ -1,3 +1,4 @@
+import math
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
@@ -23,6 +24,7 @@ def load_products_from_db(db: Session):
     records = (
         db.query(
             Product.ProductID,
+            Product.ProductName,
             Product.ProductCaption,
             ProductBrand.BrandName,
             ProductColor.ColorName,
@@ -41,7 +43,7 @@ def load_products_from_db(db: Session):
     return [
         {
             "id": row[0],
-            "caption": f"{row[1]} - {row[2]} - {row[3]} - {row[4]} - {row[5]} - {row[6]}"
+            "caption": f"{row[1]} - {row[2]} - {row[3]} - {row[4]} - {row[5]} - {row[6]} - {row[7]}"
         }
         for row in records
     ]
@@ -68,9 +70,9 @@ def on_startup():
 # Step 3: Define request and response schemas
 class SearchRequest(BaseModel):
     query: str
-    top_k: int = 2  # Default: return top 2 results
+    top_k: int = 20  # Default: return top_k results
     page: int = 1
-    items_per_page: int = 2
+    items_per_page: int = 10
 
 
 class SearchResult(BaseModel):
@@ -104,8 +106,10 @@ def semantic_search(request: SearchRequest, db: Session = Depends(get_db)):
     distances, indices = index.search(np.array(query_embedding), k=request.top_k)
 
     matched = [products_metadata[idx] for idx in indices[0]]
-    matched_ids = [item["id"] for item in matched]
+    #matched_ids = [item["id"] for item in matched]
 
+    matched_ids = list(dict.fromkeys(item["id"] for item in matched))
+    
     # Fetch Products from database by matched IDs
     products = db.query(Product).filter(Product.ProductID.in_(matched_ids)).all()
 
@@ -121,6 +125,6 @@ def semantic_search(request: SearchRequest, db: Session = Depends(get_db)):
         results=[ProductOut.model_validate(p) for p in paginated["items"]],
         currentPage=paginated["page"],
         itemsPerPage=paginated["page_size"],
-        totalPages=paginated["total_pages"],
-        totalCount=paginated["total_items"],
+        totalPages= math.ceil(request.top_k/request.items_per_page),
+        totalCount=len(ordered_products)
     )

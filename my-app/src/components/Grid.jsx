@@ -21,7 +21,7 @@ const ProductGrid = () => {
     fetch("http://127.0.0.1:8000/searchHistory/" + user_id + "?searchString=" + string)
       .then((res) => res.json())
       .then((data) => {
-        setSearchHistory(data);
+        setSearchHistory(data || []);
         console.log("search history", data);
       })
       .catch((err) => console.error("Error fetching products:", err));
@@ -37,8 +37,9 @@ const ProductGrid = () => {
     if (newValue != "") {
       getSearchHistory();
     }
-    else {
+    else if(newValue =="" || newValue.endsWith(" ")){
       setSearchHistory([]);
+      console.log("search history list:", searchHistory);
     }
 
   };
@@ -210,9 +211,9 @@ const ProductGrid = () => {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               search == "" ? fetchProducts() : fetchFilteredProducts(); setCurrentPage(1); setFullStringSearch(search);
-              insertSearchHistory();
+              insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
             }
-          }}
+          }} 
         />
         {search && (
           <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]) }} className="clear-button">
