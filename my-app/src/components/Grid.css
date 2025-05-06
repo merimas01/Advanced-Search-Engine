@@ -6,6 +6,7 @@
 }
 
 .product-card {
+  background-color: white;
   position: relative;
   border: 1px solid #ccc;
   padding: 20px;
@@ -15,16 +16,16 @@
   width: 230px;
 }
 
-.productImage{
-    height: 50%;
-    background-color: beige;
+.productImage {
+  height: 50%;
+  background-color: rgb(236, 236, 236);
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px; 
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  padding: 20px;
 }
 
 .product-image {
@@ -60,7 +61,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 20px 0;
+  padding: 20px;
 }
 
 .pagination-btn {
@@ -94,8 +95,8 @@
 
 
 
-.productCaption{
-    text-align: center;
+.productCaption {
+  text-align: center;
 }
 
 .productPrice {
@@ -108,28 +109,102 @@
   color: grey;
 }
 
-#newPrice{
-    color: red;
+#newPrice {
+  color: red;
 }
 
-.crossedPrice{
-    position: absolute;
-    bottom: 2%;
-    right: 5%;
+.crossedPrice {
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
 }
 
-.productLabel{
-    position: absolute;
-    top:2%;
-    padding: 2%;
-    border-radius: 10%;
-    font-weight: 300;
+.productLabel {
+  position: absolute;
+  top: 2%;
+  padding: 2%;
+  border-radius: 10%;
+  font-weight: 300;
 }
 
-#sale{
-    background-color: rgb(246, 134, 134);
+#sale {
+  background-color: rgb(246, 134, 134);
 }
 
-#new{
-    background-color: rgb(255, 251, 127);
+#new {
+  background-color: rgb(255, 251, 127);
+}
+
+.didYouMean {
+  width: 500;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.correctText {
+  color: rgb(17, 17, 179);
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #999;
+}
+
+.autocomplete-wrapper, .searchHistory-wrapper{
+  display: flex;
+  background-color: #ddd;
+}
+
+.autocomplete-list, .searchHistory-list {
+  list-style: none;
+  padding: 1px;
+  margin: 10px auto;
+  width: 30%;
+  background: #f8f8f8;
+  border: 1px solid #ccc;
+
+}
+/* 
+.autocomplete-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto;      
+  width: fit-content;     
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+} */
+
+.autocomplete-list li, .searchHistory-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.autocomplete-list li:hover, .searchHistory-list li:hover {
+  background-color: #e0e0e0;
+}
+
+.searchHistory-list li{
+  color: purple;
+  display: flex;
+  justify-content: space-between;
+}
+
+.searchHistory-list li .delete-btn, .btn-microphone{
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #999;
+}
+
+.btn-microphone:hover{
+  color:black;
 }

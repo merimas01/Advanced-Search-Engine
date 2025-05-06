@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from sqlmodel import Session
-from app.models.generated_models import Product
+from app.models.generated_models import Product, ProductBrand, ProductColor, ProductDepartment, ProductLabel, SubCategory
 from app.db.database import get_db, SessionLocal
 from app.schemas.schemas import ProductOut
 
@@ -17,12 +17,34 @@ index = None
 products_metadata = []  # Holds [{"id": ProductID, "caption": ProductCaption}]
 
 
-# Step 1: Load ProductID and ProductCaption from database
+# Step 1: Load ProductID and other objects from database
+
 def load_products_from_db(db: Session):
-    records = db.query(Product.ProductID, Product.ProductCaption).all()
-    return [{"id": row[0], "caption": row[1]} for row in records]
+    records = (
+        db.query(
+            Product.ProductID,
+            Product.ProductCaption,
+            ProductBrand.BrandName,
+            ProductColor.ColorName,
+            ProductDepartment.DepartmentName,
+            ProductLabel.LabelName,
+            SubCategory.SubCategoryName,
+        )
+        .join(ProductBrand, Product.ProductBrandID == ProductBrand.ProductBrandID)
+        .join(ProductColor, Product.ProductColorID == ProductColor.ProductColorID)
+        .join(ProductDepartment, Product.ProductDepartmentID == ProductDepartment.ProductDepartmentID)
+        .join(ProductLabel, Product.ProductLabelID == ProductLabel.ProductLabelID)
+        .join(SubCategory, Product.SubCategoryID == SubCategory.SubCategoryID)
+        .all()
+    )
 
-
+    return [
+        {
+            "id": row[0],
+            "caption": f"{row[1]} - {row[2]} - {row[3]} - {row[4]} - {row[5]} - {row[6]}"
+        }
+        for row in records
+    ]
 # Step 2: Initialize model and FAISS index at startup
 @router.on_event("startup")
 def on_startup():
@@ -89,7 +111,9 @@ def semantic_search(request: SearchRequest, db: Session = Depends(get_db)):
 
     # Reorder products to match search order
     id_to_product = {product.ProductID: product for product in products}
-    ordered_products = [id_to_product[pid] for pid in matched_ids if pid in id_to_product]
+    ordered_products = [
+        id_to_product[pid] for pid in matched_ids if pid in id_to_product
+    ]
 
     paginated = paginate(ordered_products, request.page, request.items_per_page)
 
