@@ -27,7 +27,7 @@ CREATE TABLE SubCategory
 CREATE TABLE ProductImage    --ovo je naslovna slika
 (
 	ProductImageID INT IDENTITY(1,1) PRIMARY KEY NOT NULL,	
-	ImageBase64 NVARCHAR(255) NULL,
+	ImageBase64 VARBINARY(MAX) NULL,
 	DateCreated DATETIME DEFAULT GETDATE() NOT NULL 
 )
 
@@ -100,4 +100,22 @@ CREATE TABLE Users
 
 ALTER TABLE SearchHistory
 ADD UserID INT FOREIGN KEY REFERENCES Users(UserID) NOT NULL
+
+ALTER TABLE ProductImage
+ADD ImagePath NVARCHAR(255) NULL
+
+
+-- to delete all the data:
+
+delete from ProductSize
+delete from Product
+delete from Size
+delete from ProductBrand
+delete from ProductColor
+delete from ProductLabel
+delete from ProductDepartment
+delete from ProductImage
+delete from SubCategory
+delete from Category
+
 

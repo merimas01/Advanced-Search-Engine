@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
-from app.models.generated_models import Product, SearchHistory
-from app.schemas.schemas import ProductOut, SearchHistoryCreate, SearchHistoryOut
+from app.models.generated_models import Product, ProductImage, SearchHistory
+from app.schemas.schemas import ProductImageCreate, ProductImageOut, ProductOut, SearchHistoryCreate, SearchHistoryOut
 
 router = APIRouter()
 
@@ -133,3 +133,22 @@ def create_search_history(item: SearchHistoryCreate, db: Session = Depends(get_d
     db.commit()
     db.refresh(new_history)
     return new_history
+
+
+@router.put("/product-image/{product_image_id}", response_model=ProductImageCreate)
+def update_product_image(
+    product_image_id: int,
+    item: ProductImageCreate,
+    db: Session = Depends(get_db)
+):
+    image = db.query(ProductImage).filter(ProductImage.ProductImageID == product_image_id).first()
+    
+    if not image:
+        raise HTTPException(status_code=404, detail="ProductImage not found")
+
+    image.ImageBase64 = item.ImageBase64
+
+    db.commit()
+    db.refresh(image)
+
+    return image

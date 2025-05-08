@@ -18,7 +18,7 @@
 
 .productImage {
   height: 50%;
-  background-color: rgb(236, 236, 236);
+  
 }
 
 .grid-container {
@@ -30,7 +30,7 @@
 
 .product-image {
   width: 100%;
-  height: 130px;
+  height: 100%;
   object-fit: contain;
   border-radius: 8px 8px 0 0;
   margin-bottom: 10px;
@@ -39,9 +39,9 @@
 .search-container {
   padding: 10px;
   font-size: 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   border: 1px solid #ccc;
-  width: 600px;
+  width: 800px;
   height: 50px;
 }
 
@@ -155,12 +155,15 @@
   color: #999;
 }
 
-.autocomplete-wrapper, .searchHistory-wrapper{
+.autocomplete-wrapper,
+.searchHistory-wrapper {
   display: flex;
+  align-items: center;
   background-color: #ddd;
 }
 
-.autocomplete-list, .searchHistory-list {
+.autocomplete-list,
+.searchHistory-list {
   list-style: none;
   padding: 1px;
   margin: 10px auto;
@@ -169,35 +172,34 @@
   border: 1px solid #ccc;
 
 }
-/* 
-.autocomplete-list {
-  list-style: none;
-  padding: 0;
-  margin: 10px auto;      
-  width: fit-content;     
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: left;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-} */
 
-.autocomplete-list li, .searchHistory-list li {
+.productCaption {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+}
+
+.autocomplete-list li,
+.searchHistory-list li {
   padding: 8px;
   cursor: pointer;
 }
 
-.autocomplete-list li:hover, .searchHistory-list li:hover {
+.autocomplete-list li:hover,
+.searchHistory-list li:hover {
   background-color: #e0e0e0;
 }
 
-.searchHistory-list li{
+.searchHistory-list li {
   color: purple;
   display: flex;
   justify-content: space-between;
 }
 
-.searchHistory-list li .delete-btn, .btn-microphone{
+.searchHistory-list li .delete-btn,
+.btn-microphone {
   background: none;
   border: none;
   cursor: pointer;
@@ -205,6 +207,6 @@
   color: #999;
 }
 
-.btn-microphone:hover{
-  color:black;
+.btn-microphone:hover {
+  color: black;
 }

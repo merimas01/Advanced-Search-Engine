@@ -37,7 +37,7 @@ const ProductGrid = () => {
     if (newValue != "") {
       getSearchHistory();
     }
-    else if(newValue =="" || newValue.endsWith(" ")){
+    else if (newValue == "" || newValue.endsWith(" ")) {
       setSearchHistory([]);
       console.log("search history list:", searchHistory);
     }
@@ -84,20 +84,33 @@ const ProductGrid = () => {
       .then((data) => {
         setProducts(data);
         setUseFiltered(false);
+        setCorrectText("");
       })
       .catch((err) => console.error("Error fetching products:", err));
   };
 
   let correctedText = "";
 
-  const fetchFilteredProducts = (page = 1) => {
+  const fetchFilteredProducts = (e, page = 1) => {
+    console.log("search", search);
+    let cleaned = e.target.value.trimEnd();
+    console.log("cleaned", cleaned);
+    setFullStringSearch(cleaned);
+    console.log("full string", fullStringSearch);
+
+    if (search.trim() == "") {
+      setCorrectText("");
+    }
+    // console.log("search length",search.length);
+    // console.log("cleaned length", cleaned.length);
+
     fetch("http://127.0.0.1:8000/correct-text", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: search,
+        text: cleaned,
       }),
     })
       .then((res) => res.json())
@@ -105,6 +118,7 @@ const ProductGrid = () => {
         correctedText = data.corrected_text;
         console.log("correctedText", correctedText);
         setCorrectText(data.corrected_text);
+
 
         return fetch("http://127.0.0.1:8000/semantic-search", {
           method: "POST",
@@ -135,6 +149,7 @@ const ProductGrid = () => {
     setSearch(newValue);
 
     console.log("new search value:", newValue);
+    console.log("search", search);
 
     // Trigger autocomplete only when user finishes a word
     if (newValue.endsWith(" ")) {
@@ -147,19 +162,47 @@ const ProductGrid = () => {
   };
 
   const fetchAutocompleteSuggestions = (inputText) => {
-    fetch("http://127.0.0.1:8000/suggest-next-words", {
+    let cleaned = inputText.trimEnd();
+
+    setFullStringSearch(cleaned);
+
+    if (search.trim() == "") {
+      setCorrectText("");
+    }
+
+    fetch("http://127.0.0.1:8000/correct-text", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ context: [inputText] }),
+      body: JSON.stringify({
+        text: cleaned,
+      }),
     })
       .then((res) => res.json())
+      .then((data) => {
+        correctedText = data.corrected_text;
+        console.log("correctedText", correctedText);
+        setCorrectText(data.corrected_text);
+
+        return fetch("http://127.0.0.1:8000/suggest-next-words", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            context: [correctText]
+          }),
+        });
+      }).
+      then((res) => res.json())
       .then((data) => {
         console.log(data.suggestions);
         setSuggestions(data.suggestions || []);
       })
-      .catch((err) => console.error("Autocomplete fetch error:", err));
+      .catch((err) => console.error("Error in autocomplete method:", err));
+
+
   };
 
 
@@ -189,10 +232,10 @@ const ProductGrid = () => {
   const displayedProducts = useFiltered ? filteredProducts : products;
 
 
-  const handlePageChange = (page, totalPages) => {
+  const handlePageChange = (e, page, totalPages) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    fetchFilteredProducts(page);
+    fetchFilteredProducts(e, page);
   };
 
   return (
@@ -205,18 +248,18 @@ const ProductGrid = () => {
         <input
           className="search-container"
           type="text"
-          placeholder="Search products..."
+          placeholder="🔍 Search products..."
           value={search}
           onChange={(e) => { handleSearchChange(e); handleSearchHistoryChange(e); }} //setSearch(e.target.value);
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              search == "" ? fetchProducts() : fetchFilteredProducts(); setCurrentPage(1); setFullStringSearch(search);
+              search == "" || search.trim() == "" ? fetchProducts() : fetchFilteredProducts(e, 1); setCurrentPage(1);
               insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
             }
-          }} 
+          }}
         />
         {search && (
-          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]) }} className="clear-button">
+          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setUseFiltered(false); }} className="clear-button">
             <FiX />
           </button>
         )}
@@ -235,9 +278,10 @@ const ProductGrid = () => {
 
       {searchHistory.length > 0 && (
         <div className="searchHistory-wrapper">
+          <h6>Your search history:</h6>
           <ul className="searchHistory-list">
             {searchHistory.map((obj, index) => (
-              <li key={index} onClick={() => setSearch(obj.SearchInput)}>
+              <li key={index} onClick={() => { setSearch(obj.SearchInput); setFullStringSearch(obj.SearchInput); }}>
                 {obj.SearchInput}
                 <button
                   onClick={() => handleDeleteSearchItem(obj.SearchHistoryID)}
@@ -253,9 +297,10 @@ const ProductGrid = () => {
 
       {suggestions.length > 0 && (
         <div className="autocomplete-wrapper">
+          <h6>Search suggestions:</h6>
           <ul className="autocomplete-list">
             {suggestions.map((word, index) => (
-              <li key={index} onClick={() => setSearch(search + word + " ")}>
+              <li key={index} onClick={() => { setSearch(search + word + " "); setFullStringSearch(search + word + " "); }}>
                 {word}
               </li>
             ))}
@@ -284,15 +329,15 @@ const ProductGrid = () => {
             </div>
 
             <div className="productImage">
-              {product.ProductImage.ImageBase64 === "" ? (
+              {product.ProductImage.ImageBase64 == null ? (
                 <img
-                  src="src/assets/react.svg"
+                  src="src/assets/no-image.svg" //src/assets/no-image.svg
                   alt={product.ProductName}
                   className="product-image"
                 />
               ) : (
                 <img
-                  src={product.ProductImage.ImageBase64}
+                  src={product.ProductImage.ImageBase64} //`data:image/jpeg;base64${product.ProductImage.ImageBase64}`
                   alt={product.ProductName}
                   className="product-image"
                 />
@@ -324,7 +369,7 @@ const ProductGrid = () => {
       {useFiltered &&
         <div className="pagination">
           <button
-            onClick={() => handlePageChange(currentPage - 1, totalPages)}
+            onClick={(e) => handlePageChange(e, currentPage - 1, totalPages)}
             disabled={currentPage === 1}
             className="pagination-btn"
           >
@@ -334,7 +379,7 @@ const ProductGrid = () => {
           <span className="page-number">{currentPage}</span>
 
           <button
-            onClick={() => handlePageChange(currentPage + 1, totalPages)}
+            onClick={(e) => handlePageChange(e, currentPage + 1, totalPages)}
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >

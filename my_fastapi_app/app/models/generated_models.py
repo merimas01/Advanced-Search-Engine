@@ -9,6 +9,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     Identity,
     Integer,
+    LargeBinary,
     PrimaryKeyConstraint,
     String,
     Unicode,
@@ -118,9 +119,8 @@ class ProductImage(Base):
     DateCreated: Mapped[datetime.datetime] = mapped_column(
         DateTime, server_default=text("(getdate())")
     )
-    ImageBase64: Mapped[Optional[str]] = mapped_column(
-        Unicode(255, "SQL_Latin1_General_CP1_CI_AS")
-    )
+    ImageBase64: Mapped[Optional[bytes]] = mapped_column(LargeBinary, nullable=True)
+    ImagePath: Mapped[Optional[str]] = mapped_column(Unicode(255, 'SQL_Latin1_General_CP1_CI_AS'))
 
     Product: Mapped[List["Product"]] = relationship(
         "Product", back_populates="ProductImage"

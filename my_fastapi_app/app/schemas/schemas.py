@@ -27,13 +27,20 @@ class ProductBrandOut(BaseModel):
     class Config:
         from_attributes = True
 
+
 class ProductImageOut(BaseModel):
     ProductImageID: int
-    ImageBase64: Optional[str]
+    ImagePath: Optional[str]
+    ImageBase64: Optional[bytes]
 
     class Config:
         from_attributes = True
 
+class ProductImageCreate(BaseModel):
+    ImageBase64 : Optional[bytes]
+      
+    class Config:
+        from_attributes = True
 
 class ProductDepartmentOut(BaseModel):
     ProductDepartmentID: int
@@ -41,6 +48,7 @@ class ProductDepartmentOut(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 class ProductLabelOut(BaseModel):
     ProductLabelID: int
@@ -64,34 +72,35 @@ class ProductOut(BaseModel):
     ProductImage: ProductImageOut
     ProductDepartment: ProductDepartmentOut
     ProductLabel: Optional[ProductLabelOut] = None
-    ProductSize: List['ProductSizeOut']
+    ProductSize: List["ProductSizeOut"]
 
     class Config:
         from_attributes = True
 
-       
+
 class SizeOut(BaseModel):
-    SizeID:int
-    SizeName:str
-    
+    SizeID: int
+    SizeName: str
+
     class Config:
         from_attributes = True
 
 
 class ProductSizeOut(BaseModel):
     ProductSizeID: int
-    
+
     Available: bool
     Size: SizeOut
-    
+
     class Config:
         from_attributes = True
- 
+
+
 class UsersOut(BaseModel):
     UserID: int
     Name: str
-    Surname : str
-    Username : str
+    Surname: str
+    Username: str
     Password: str
 
     class Config:
@@ -101,7 +110,7 @@ class UsersOut(BaseModel):
 class SearchHistoryOut(BaseModel):
     SearchHistoryID: int
     SearchInput: str
-    DateCreated : datetime
+    DateCreated: datetime
     Users: UsersOut
 
     class Config:

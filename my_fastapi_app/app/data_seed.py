@@ -98,8 +98,46 @@ def seed_all_data():
     session.flush()
 
     # Seed Product Image
-    image1 = ProductImage(ImageBase64="")
-    session.add_all([image1])
+
+    image_mobile = ProductImage(
+        ImagePath="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9.jpeg",
+        ImageBase64=None,
+    )
+    image_laptop = ProductImage(
+        ImagePath="https://images.unsplash.com/photo-1517336714731-489689fd1ca8.jpeg",
+        ImageBase64=None,
+    )
+    image_tv = ProductImage(
+        ImagePath="https://hackaday.com/wp-content/uploads/2023/05/telly-startup-featured.jpg",
+        ImageBase64=None,
+    )
+    image_shoes = ProductImage(
+        ImagePath="https://img.freepik.com/free-photo/fashion-shoes-sneakers_1203-7529.jpg?semt=ais_hybrid&w=740.avif",
+        ImageBase64=None,
+    )
+    image_jacket = ProductImage(
+        ImagePath="https://images.teemill.com/dpsuued0awwmlyoqbukwvfiudddvh8hgxbab35h8yj4xnsmi.png.jpg?w=1080&h=1080&v=2.jpeg",
+        ImageBase64=None,
+    )
+    image_shirt = ProductImage(
+        ImagePath="https://img.kwcdn.com/product/fancy/dae396d4-dc2f-48f5-a3ca-8ded5944726b.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp.webp",
+        ImageBase64=None,
+    )
+    image_headphones = ProductImage(
+        ImagePath="https://unblast.com/wp-content/uploads/2020/07/Headphone-Mockup-1.jpg",
+        ImageBase64=None,
+    )
+    session.add_all(
+        [
+            image_mobile,
+            image_laptop,
+            image_tv,
+            image_shoes,
+            image_jacket,
+            image_shirt,
+            image_headphones,
+        ]
+    )
     session.flush()
 
     # Seed Product Labels
@@ -114,12 +152,12 @@ def seed_all_data():
     # Seed Products
     iphone = Product(
         ProductName="iPhone 14",
-        ProductCaption="Latest Apple iPhone",
+        ProductCaption="The latest flagship smartphone from Apple, featuring a stunning display and powerful A15 Bionic chip.",
         ProductPrice=999.99,
         ProductBrandID=apple.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -127,12 +165,12 @@ def seed_all_data():
 
     galaxy = Product(
         ProductName="Galaxy S23",
-        ProductCaption="Latest Samsung Galaxy",
+        ProductCaption="Samsung's cutting-edge smartphone with a gorgeous screen, advanced camera features, and powerful performance.",
         ProductPrice=899.99,
         ProductBrandID=samsung.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -140,12 +178,12 @@ def seed_all_data():
 
     tshirt = Product(
         ProductName="Nike T-Shirt",
-        ProductCaption="Comfortable and stylish",
+        ProductCaption="A comfortable and stylish T-shirt made with high-quality materials, perfect for any casual outing.",
         ProductPrice=29.99,
         ProductBrandID=nike.ProductBrandID,
         ProductColorID=red.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_shirt.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -153,12 +191,12 @@ def seed_all_data():
 
     macbook = Product(
         ProductName="MacBook Pro 14",
-        ProductCaption="Powerful laptop for professionals",
+        ProductCaption="Apple's powerhouse laptop designed for professionals, featuring the M1 Pro chip and a stunning Retina display.",
         ProductPrice=1999.99,
         ProductBrandID=apple.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_laptop.ProductImageID,
         SubCategoryID=laptops.SubCategoryID,
         NewPrice=1880.99,
         ProductLabelID=super_price.ProductLabelID,
@@ -166,12 +204,12 @@ def seed_all_data():
 
     samsung_laptop = Product(
         ProductName="Samsung Galaxy Book",
-        ProductCaption="Portable and sleek design",
+        ProductCaption="A sleek and portable laptop with long-lasting battery life, perfect for work and play.",
         ProductPrice=1299.99,
         ProductBrandID=samsung.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_laptop.ProductImageID,
         SubCategoryID=laptops.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -179,12 +217,12 @@ def seed_all_data():
 
     nike_jacket = Product(
         ProductName="Nike Windrunner Jacket",
-        ProductCaption="Stylish and weather resistant",
+        ProductCaption="A stylish and weather-resistant jacket, perfect for outdoor activities or casual wear in any season.",
         ProductPrice=79.99,
         ProductBrandID=nike.ProductBrandID,
         ProductColorID=red.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_jacket.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=40.99,
         ProductLabelID=sale.ProductLabelID,
@@ -192,12 +230,12 @@ def seed_all_data():
 
     nike_shoes = Product(
         ProductName="Nike Air Max",
-        ProductCaption="High performance sports shoes",
+        ProductCaption="High-performance running shoes with Air-Sole cushioning and a sleek design for comfort and support.",
         ProductPrice=149.99,
         ProductBrandID=nike.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_shoes.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -205,12 +243,12 @@ def seed_all_data():
 
     samsung_earbuds = Product(
         ProductName="Samsung Galaxy Buds",
-        ProductCaption="Wireless noise-cancelling earbuds",
+        ProductCaption="Wireless, noise-cancelling earbuds with exceptional sound quality, perfect for music lovers and commuters.",
         ProductPrice=129.99,
         ProductBrandID=samsung.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_headphones.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -218,12 +256,12 @@ def seed_all_data():
 
     samsung_galaxy_s21 = Product(
         ProductName="Samsung Galaxy S21",
-        ProductCaption="Next-generation 5G smartphone",
+        ProductCaption="Next-generation 5G smartphone with an all-day battery, ultra-responsive camera, and stunning display.",
         ProductPrice=799.99,
         ProductBrandID=samsung.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -231,12 +269,12 @@ def seed_all_data():
 
     apple_iphone_13 = Product(
         ProductName="Apple iPhone 13",
-        ProductCaption="The latest iPhone with A15 Bionic Chip",
+        ProductCaption="The iPhone 13 features an A15 Bionic chip, 5G capabilities, and an ultra-wide camera for amazing photos and videos.",
         ProductPrice=799.99,
         ProductBrandID=apple.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -244,12 +282,12 @@ def seed_all_data():
 
     sonny_wh = Product(
         ProductName="Sony WH-1000XM4",
-        ProductCaption="Noise Cancelling Over-Ear Headphones",
+        ProductCaption="Noise-cancelling over-ear headphones offering premium sound quality and superior comfort for long listening sessions.",
         ProductPrice=349.99,
         ProductBrandID=sony.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_headphones.ProductImageID,
         SubCategoryID=headphones.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -257,12 +295,12 @@ def seed_all_data():
 
     xiaomi_phone = Product(
         ProductName="Xiaomi Redmi Note 12",
-        ProductCaption="Affordable power with stunning display",
+        ProductCaption="An affordable smartphone with a stunning display and powerful performance, ideal for budget-conscious buyers.",
         ProductPrice=299.99,
         ProductBrandID=xiaomi.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -270,12 +308,12 @@ def seed_all_data():
 
     sony_tv = Product(
         ProductName='Sony Bravia 55" 4K TV',
-        ProductCaption="Crystal-clear visuals and smart features",
+        ProductCaption="A 55-inch smart 4K TV with crisp visuals, immersive sound, and a variety of smart features for a cinematic experience.",
         ProductPrice=699.99,
         ProductBrandID=sony.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_tv.ProductImageID,
         SubCategoryID=tv.SubCategoryID,
         NewPrice=649.99,
         ProductLabelID=super_price.ProductLabelID,
@@ -283,12 +321,12 @@ def seed_all_data():
 
     adidas_shoes = Product(
         ProductName="Adidas Ultraboost",
-        ProductCaption="Maximum comfort for running",
+        ProductCaption="High-performance running shoes with incredible comfort, cushioning, and a sleek modern design.",
         ProductPrice=159.99,
         ProductBrandID=adidas.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_shoes.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -296,12 +334,12 @@ def seed_all_data():
 
     hp_laptop = Product(
         ProductName="HP Pavilion 15",
-        ProductCaption="Reliable performance for everyday tasks",
+        ProductCaption="A reliable laptop perfect for daily use, offering excellent performance and value for money.",
         ProductPrice=749.99,
         ProductBrandID=hp.ProductBrandID,
         ProductColorID=grey.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_laptop.ProductImageID,
         SubCategoryID=laptops.SubCategoryID,
         NewPrice=699.99,
         ProductLabelID=sale.ProductLabelID,
@@ -309,12 +347,12 @@ def seed_all_data():
 
     apple_watch = Product(
         ProductName="Apple Watch Series 8",
-        ProductCaption="Advanced health tracking and style",
+        ProductCaption="The ultimate smartwatch for fitness tracking, notifications, and health monitoring with a sleek design.",
         ProductPrice=399.99,
         ProductBrandID=apple.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_headphones.ProductImageID,
         SubCategoryID=wearables.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -322,12 +360,12 @@ def seed_all_data():
 
     dell_xps = Product(
         ProductName="Dell XPS 13",
-        ProductCaption="Compact and powerful ultrabook",
+        ProductCaption="Compact and powerful ultrabook with a stunning display and premium build quality.",
         ProductPrice=1399.99,
         ProductBrandID=dell.ProductBrandID,
         ProductColorID=silver.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_laptop.ProductImageID,
         SubCategoryID=laptops.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -335,12 +373,12 @@ def seed_all_data():
 
     lenovo_legion = Product(
         ProductName="Lenovo Legion 5",
-        ProductCaption="Gaming laptop with high refresh rate display",
+        ProductCaption="A gaming laptop with a high refresh rate display, powerful GPU, and exceptional performance for gaming enthusiasts.",
         ProductPrice=1149.99,
         ProductBrandID=lenovo.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_laptop.ProductImageID,
         SubCategoryID=laptops.SubCategoryID,
         NewPrice=999.99,
         ProductLabelID=super_price.ProductLabelID,
@@ -348,12 +386,12 @@ def seed_all_data():
 
     fitbit_versa = Product(
         ProductName="Fitbit Versa 3",
-        ProductCaption="Health & fitness smartwatch",
+        ProductCaption="A health & fitness smartwatch designed to help you stay active, monitor sleep, and track daily activities.",
         ProductPrice=229.99,
         ProductBrandID=fitbit.ProductBrandID,
         ProductColorID=pink.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_headphones.ProductImageID,
         SubCategoryID=wearables.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -361,12 +399,12 @@ def seed_all_data():
 
     lg_oled_tv = Product(
         ProductName='LG OLED C1 65"',
-        ProductCaption="Stunning OLED visuals with Dolby Vision",
+        ProductCaption="A 65-inch OLED TV with exceptional color accuracy, deep blacks, and Dolby Vision for an immersive viewing experience.",
         ProductPrice=1799.99,
         ProductBrandID=lg.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_tv.ProductImageID,
         SubCategoryID=tv.SubCategoryID,
         NewPrice=1599.99,
         ProductLabelID=sale.ProductLabelID,
@@ -374,12 +412,12 @@ def seed_all_data():
 
     adidas_hoodie = Product(
         ProductName="Adidas Essentials Hoodie",
-        ProductCaption="Warm and comfortable hoodie",
+        ProductCaption="A warm and comfortable hoodie designed for everyday wear, with a cozy fit and classic style.",
         ProductPrice=49.99,
         ProductBrandID=adidas.ProductBrandID,
         ProductColorID=grey.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_jacket.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=None,
         ProductLabelID=standard.ProductLabelID,
@@ -387,12 +425,12 @@ def seed_all_data():
 
     puma_running_shoes = Product(
         ProductName="Puma Velocity Nitro",
-        ProductCaption="Responsive running shoes for daily runs",
+        ProductCaption="Responsive and lightweight running shoes, designed for daily runs and maximum comfort.",
         ProductPrice=119.99,
         ProductBrandID=puma.ProductBrandID,
         ProductColorID=blue.ProductColorID,
         ProductDepartmentID=wear.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_shoes.ProductImageID,
         SubCategoryID=clothing.SubCategoryID,
         NewPrice=None,
         ProductLabelID=new.ProductLabelID,
@@ -400,54 +438,184 @@ def seed_all_data():
 
     sony_soundbar = Product(
         ProductName="Sony HT-G700 Soundbar",
-        ProductCaption="Immersive cinematic audio",
+        ProductCaption="An immersive cinematic audio experience with clear sound and deep bass to complement your home theater.",
         ProductPrice=499.99,
         ProductBrandID=sony.ProductBrandID,
         ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_headphones.ProductImageID,
         SubCategoryID=audio.SubCategoryID,
         NewPrice=449.99,
-        ProductLabelID=super_price.ProductLabelID,
+        ProductLabelID=sale.ProductLabelID,
     )
 
     bose_qc45 = Product(
         ProductName="Bose QuietComfort 45",
-        ProductCaption="Top-tier noise-cancelling headphones",
-        ProductPrice=329.99,
+        ProductCaption="High-fidelity noise-canceling headphones for immersive sound and comfort.",
+        ProductPrice=329.00,
         ProductBrandID=bose.ProductBrandID,
-        ProductColorID=white.ProductColorID,
+        ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
-        SubCategoryID=headphones.SubCategoryID,
-        NewPrice=None,
-        ProductLabelID=standard.ProductLabelID,
+        ProductImageID=image_headphones.ProductImageID,
+        SubCategoryID=audio.SubCategoryID,
+        NewPrice=299.00,
+        ProductLabelID=sale.ProductLabelID,
     )
 
     apple_airpods_pro = Product(
-        ProductName="Apple AirPods Pro 2",
-        ProductCaption="Personalized Spatial Audio & ANC",
-        ProductPrice=249.99,
+        ProductName="Apple AirPods Pro",
+        ProductCaption="Active noise cancellation and adaptive EQ for a premium wireless audio experience.",
+        ProductPrice=249.00,
         ProductBrandID=apple.ProductBrandID,
         ProductColorID=white.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
-        SubCategoryID=headphones.SubCategoryID,
-        NewPrice=None,
+        ProductImageID=image_headphones.ProductImageID,
+        SubCategoryID=audio.SubCategoryID,
+        NewPrice=229.00,
         ProductLabelID=new.ProductLabelID,
     )
 
     google_pixel = Product(
         ProductName="Google Pixel 7",
-        ProductCaption="Pure Android experience and great camera",
-        ProductPrice=649.99,
+        ProductCaption="Google’s flagship phone with an exceptional camera and pure Android experience.",
+        ProductPrice=599.00,
         ProductBrandID=google.ProductBrandID,
-        ProductColorID=green.ProductColorID,
+        ProductColorID=black.ProductColorID,
         ProductDepartmentID=tech.ProductDepartmentID,
-        ProductImageID=image1.ProductImageID,
+        ProductImageID=image_mobile.ProductImageID,
         SubCategoryID=mobiles.SubCategoryID,
-        NewPrice=599.99,
+        NewPrice=549.00,
         ProductLabelID=sale.ProductLabelID,
+    )
+
+    google_pixel_8 = Product(
+        ProductName="Google Pixel 8",
+        ProductCaption="The latest Google Pixel with advanced AI features and an upgraded camera system.",
+        ProductPrice=699.00,
+        ProductBrandID=google.ProductBrandID,
+        ProductColorID=black.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_mobile.ProductImageID,
+        SubCategoryID=mobiles.SubCategoryID,
+        NewPrice=649.00,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    samsung_galaxy_z_fold = Product(
+        ProductName="Samsung Galaxy Z Fold",
+        ProductCaption="Futuristic foldable smartphone with a massive display and multitasking capabilities.",
+        ProductPrice=1799.00,
+        ProductBrandID=samsung.ProductBrandID,
+        ProductColorID=black.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_mobile.ProductImageID,
+        SubCategoryID=mobiles.SubCategoryID,
+        NewPrice=1699.00,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    macbook_air_m2 = Product(
+        ProductName="MacBook Air M2",
+        ProductCaption="Supercharged by the Apple M2 chip, ultra-light, and efficient for everyday productivity.",
+        ProductPrice=1199.00,
+        ProductBrandID=apple.ProductBrandID,
+        ProductColorID=silver.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_laptop.ProductImageID,
+        SubCategoryID=laptops.SubCategoryID,
+        NewPrice=1099.00,
+        ProductLabelID=sale.ProductLabelID,
+    )
+
+    sony_wh1000xm5 = Product(
+        ProductName="Sony WH-1000XM5",
+        ProductCaption="Industry-leading noise cancellation headphones with exceptional sound clarity.",
+        ProductPrice=399.00,
+        ProductBrandID=sony.ProductBrandID,
+        ProductColorID=black.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_headphones.ProductImageID,
+        SubCategoryID=audio.SubCategoryID,
+        NewPrice=379.00,
+        ProductLabelID=sale.ProductLabelID,
+    )
+
+    nike_air_max_2023 = Product(
+        ProductName="Nike Air Max 2023",
+        ProductCaption="Comfortable and stylish performance sneakers for everyday wear and workouts.",
+        ProductPrice=149.00,
+        ProductBrandID=nike.ProductBrandID,
+        ProductColorID=white.ProductColorID,
+        ProductDepartmentID=wear.ProductDepartmentID,
+        ProductImageID=image_shoes.ProductImageID,
+        SubCategoryID=clothing.SubCategoryID,
+        NewPrice=129.00,
+        ProductLabelID=sale.ProductLabelID,
+    )
+
+    adidas_superstar = Product(
+        ProductName="Adidas Superstar",
+        ProductCaption="Iconic sneakers with classic shell toe design and premium comfort.",
+        ProductPrice=99.00,
+        ProductBrandID=adidas.ProductBrandID,
+        ProductColorID=white.ProductColorID,
+        ProductDepartmentID=wear.ProductDepartmentID,
+        ProductImageID=image_shoes.ProductImageID,
+        SubCategoryID=clothing.SubCategoryID,
+        NewPrice=89.00,
+        ProductLabelID=sale.ProductLabelID,
+    )
+
+    hp_spectre_x360 = Product(
+        ProductName="HP Spectre x360",
+        ProductCaption="Sleek convertible laptop with touch display and top-tier performance.",
+        ProductPrice=1399.00,
+        ProductBrandID=hp.ProductBrandID,
+        ProductColorID=silver.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_laptop.ProductImageID,
+        SubCategoryID=laptops.SubCategoryID,
+        NewPrice=1299.00,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    bose_quietcomfort_45 = Product(
+        ProductName="Bose QuietComfort 45",
+        ProductCaption="Legendary comfort and premium noise-canceling technology for pure audio enjoyment.",
+        ProductPrice=329.00,
+        ProductBrandID=bose.ProductBrandID,
+        ProductColorID=black.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_headphones.ProductImageID,
+        SubCategoryID=audio.SubCategoryID,
+        NewPrice=309.00,
+        ProductLabelID=sale.ProductLabelID,
+    )
+
+    lg_cinebeam_projector = Product(
+        ProductName="LG CineBeam Projector",
+        ProductCaption="Portable smart projector delivering stunning visuals for home cinema lovers.",
+        ProductPrice=999.00,
+        ProductBrandID=lg.ProductBrandID,
+        ProductColorID=white.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_tv.ProductImageID,
+        SubCategoryID=tv.SubCategoryID,
+        NewPrice=949.00,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    apple_watch_ultra = Product(
+        ProductName="Apple Watch Ultra",
+        ProductCaption="Rugged and capable smartwatch built for endurance and exploration.",
+        ProductPrice=799.00,
+        ProductBrandID=apple.ProductBrandID,
+        ProductColorID=red.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_headphones.ProductImageID,
+        SubCategoryID=wearables.SubCategoryID,
+        NewPrice=749.00,
+        ProductLabelID=new.ProductLabelID,
     )
     session.add_all(
         [
@@ -477,6 +645,16 @@ def seed_all_data():
             bose_qc45,
             apple_airpods_pro,
             google_pixel,
+            google_pixel_8,
+            samsung_galaxy_z_fold,
+            macbook_air_m2,
+            sony_wh1000xm5,
+            nike_air_max_2023,
+            adidas_superstar,
+            hp_spectre_x360,
+            bose_quietcomfort_45,
+            lg_cinebeam_projector,
+            apple_watch_ultra,
         ]
     )
     session.flush()
