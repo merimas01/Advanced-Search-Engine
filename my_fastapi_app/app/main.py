@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import basic_routes, spell_corection_route, multiword_search_route, autocomplete_search_route, speech_recognition_route
+from app.routes import autocomplete_word_route, basic_routes, spell_corection_route, multiword_search_route
 
 app = FastAPI()
 
@@ -17,7 +17,5 @@ app.add_middleware(
 app.include_router(basic_routes.router)
 app.include_router(spell_corection_route.router)
 app.include_router(multiword_search_route.router)
-app.include_router(autocomplete_search_route.router)
-app.include_router(speech_recognition_route.router)
-
+app.include_router(autocomplete_word_route.router)
 

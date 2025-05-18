@@ -15,6 +15,7 @@ const ProductGrid = () => {
   const [searchHistory, setSearchHistory] = useState([]);
   const totalPages = 2; //top_k/items_per_page
   const user_id = 12;
+  const [isEnter, setIsEnter] = useState(false);
 
   const getSearchHistory = () => {
     let string = search ? search : "";
@@ -101,8 +102,6 @@ const ProductGrid = () => {
     if (search.trim() == "") {
       setCorrectText("");
     }
-    // console.log("search length",search.length);
-    // console.log("cleaned length", cleaned.length);
 
     fetch("http://127.0.0.1:8000/correct-text", {
       method: "POST",
@@ -118,7 +117,7 @@ const ProductGrid = () => {
         correctedText = data.corrected_text;
         console.log("correctedText", correctedText);
         setCorrectText(data.corrected_text);
-
+        console.log("correct text", correctText);
 
         return fetch("http://127.0.0.1:8000/semantic-search", {
           method: "POST",
@@ -141,32 +140,54 @@ const ProductGrid = () => {
       .catch((err) => console.error("Error in filtering flow:", err));
   };
 
+  const fetchSpeechRecognitionProducts = (transcript, page = 1) => {
+
+    return fetch("http://127.0.0.1:8000/semantic-search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: transcript,
+        top_k: 20,
+        page: page,
+        items_per_page: 10,
+      }),
+    })
+
+      .then((res) => res.json())
+      .then((data) => {
+        setFilteredProducts(data.results || data);
+        setUseFiltered(true);
+      })
+      .catch((err) => console.error("Error in filtering flow:", err));
+  };
 
   const [suggestions, setSuggestions] = useState([]);
+  const [nextWord, setNextWord] = useState("");
 
   const handleSearchChange = (e) => {
     const newValue = e.target.value;
     setSearch(newValue);
 
-    console.log("new search value:", newValue);
-    console.log("search", search);
+    console.log("new search value:", newValue.length);
+    console.log("search", search.length);
 
     // Trigger autocomplete only when user finishes a word
     if (newValue.endsWith(" ")) {
       fetchAutocompleteSuggestions(newValue.trim());
     }
     else {
+      setNextWord("");
       setSuggestions([]);
     }
-
   };
 
   const fetchAutocompleteSuggestions = (inputText) => {
-    let cleaned = inputText.trimEnd();
+    console.log("input text", inputText.length);
+    setFullStringSearch(inputText);
 
-    setFullStringSearch(cleaned);
-
-    if (search.trim() == "") {
+    if (inputText.trim() == "") {
       setCorrectText("");
     }
 
@@ -176,7 +197,7 @@ const ProductGrid = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: cleaned,
+        text: inputText,
       }),
     })
       .then((res) => res.json())
@@ -184,45 +205,95 @@ const ProductGrid = () => {
         correctedText = data.corrected_text;
         console.log("correctedText", correctedText);
         setCorrectText(data.corrected_text);
+        console.log("correct text", correctText);
 
-        return fetch("http://127.0.0.1:8000/suggest-next-words", {
+        return fetch("http://127.0.0.1:8000/gpt2-suggestions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            context: [correctText]
+            prompt: data.corrected_text,
+            top_k: 5,
+
           }),
         });
-      }).
-      then((res) => res.json())
+      })
+      .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         console.log(data.suggestions);
         setSuggestions(data.suggestions || []);
       })
-      .catch((err) => console.error("Error in autocomplete method:", err));
+      .catch((err) => console.error("Error in filtering flow:", err));
+
+
+    // fetch("http://127.0.0.1:8000/gpt2-suggestions", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     prompt: inputText,
+    //     top_k: 5
+    //   }),
+    // }).
+    //   then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     console.log(data.suggestions);
+    //     setSuggestions(data.suggestions || []);
+    //   })
+    //   .catch((err) => console.error("Error in autocomplete method:", err));
 
 
   };
 
+  const SpeechRecognizer = () => {
+    const [transcript, setTranscript] = useState("");
+    const [listening, setListening] = useState(false);
 
-  const [isMicrohoneClicked, setMicrophoneClicked] = useState(false);
-  const speechRecognition = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/speech-to-text");
-      if (!response.ok) {
-        throw new Error("Failed to get speech-to-text result");
+    const startListening = () => {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        alert("Your browser does not support Speech Recognition");
+        return;
       }
-      const data = await response.json();
-      console.log("Recognized text:", data);
-      // Optionally update your input field or state with it
-      setSearch(data);
-      setMicrophoneClicked(true);
-    } catch (error) {
-      console.error("Error calling speech-to-text API:", error);
-    }
-  };
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
+      recognition.onresult = (event) => {
+        const speechResult = event.results[0][0].transcript;
+        setTranscript(speechResult);
+        console.log("Recognized:", speechResult);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event.error);
+      };
+
+      recognition.onend = () => {
+        setListening(false);
+      };
+
+      recognition.start();
+      setListening(true);
+    };
+
+    return (
+      <div>
+        <button onClick={startListening} disabled={listening}>
+          {listening ? "Listening..." : "Start Listening"}
+        </button>
+        <p>Transcript: {transcript}</p>
+        {transcript && <button onClick={(e) => { setSearch(transcript); fetchSpeechRecognitionProducts(transcript, 1); setCorrectText(""); }} >Filter data</button>}
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchProducts(); // initial load
@@ -250,28 +321,34 @@ const ProductGrid = () => {
           type="text"
           placeholder="🔍 Search products..."
           value={search}
-          onChange={(e) => { handleSearchChange(e); handleSearchHistoryChange(e); }} //setSearch(e.target.value);
+          onChange={(e) => { setIsEnter(false); handleSearchChange(e); handleSearchHistoryChange(e); }} //setSearch(e.target.value);
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
+              setIsEnter(true);
               search == "" || search.trim() == "" ? fetchProducts() : fetchFilteredProducts(e, 1); setCurrentPage(1);
               insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
             }
           }}
         />
         {search && (
-          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setUseFiltered(false); }} className="clear-button">
+          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setSuggestions([]); setUseFiltered(false); }} className="clear-button">
             <FiX />
           </button>
         )}
-        <button className="btn-microphone" onClick={() =>
-          speechRecognition()
-        }>  <FaMicrophone size={24} /></button>
+
+        {/* Inline suggestion ghost text */}
+
+
+        {/* <button className="btn-microphone" onClick={() =>
+          SpeechRecognizer()
+        }>  <FaMicrophone size={24} /></button> */}
+
         {/* <button type="button" className="searchButton" onClick={() => { search == "" ? fetchProducts() : fetchFilteredProducts(); setCurrentPage(1); setFullStringSearch(search); }} >
           <FiSearch className="search-icon" />
         </button> */}
       </div>
 
-      {isMicrohoneClicked && <div><p>say something...</p></div>}
+      <SpeechRecognizer />
 
       {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText">{correctText}</h4></div>}
 
@@ -299,12 +376,26 @@ const ProductGrid = () => {
         <div className="autocomplete-wrapper">
           <h6>Search suggestions:</h6>
           <ul className="autocomplete-list">
-            {suggestions.map((word, index) => (
-              <li key={index} onClick={() => { setSearch(search + word + " "); setFullStringSearch(search + word + " "); }}>
-                {word}
+            {suggestions.map(({ suggestion }, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  const newSearch = correctText + " " + suggestion + " ";
+                  setSearch(newSearch);
+                  setFullStringSearch(newSearch);
+                  setSuggestions([]);
+                }}
+              >
+                {correctText !== fullStringSearch ? (
+                  <b>{correctText} {suggestion}</b>
+                ) : (
+                  <>
+                    {fullStringSearch} <b>{suggestion}</b>
+                  </>
+                )}
+
               </li>
             ))}
-
           </ul>
 
         </div>

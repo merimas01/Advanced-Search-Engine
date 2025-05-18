@@ -101,7 +101,7 @@ def get_search_history_by_userId(
     if searchString:
         query = query.filter(SearchHistory.SearchInput.ilike(f"%{searchString}%"))
 
-    history = query.order_by(desc(SearchHistory.DateCreated)).limit(10).all()
+    history = query.order_by(desc(SearchHistory.DateCreated)).limit(5).all()
 
     if not history:
         raise HTTPException(status_code=200, detail="List not found")

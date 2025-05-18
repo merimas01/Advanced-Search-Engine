@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from symspellpy.symspellpy import SymSpell, Verbosity
 import pkg_resources
 
+
 # Initialize router
 router = APIRouter()
 
@@ -10,10 +11,15 @@ router = APIRouter()
 sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 
 # Load dictionary
-dictionary_path = pkg_resources.resource_filename(
-    "symspellpy", "frequency_dictionary_en_82_765.txt"
-)
+# dictionary_path = pkg_resources.resource_filename(
+#     "symspellpy", "frequency_dictionary_en_82_765.txt"
+# )
+
+dictionary_path = "app/routes/my_dictionary.txt"
+
 sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+
+print(f"Number of words loaded in dictionary: {sym_spell.word_count}")
 
 # Pydantic model for request
 class CorrectionRequest(BaseModel):
