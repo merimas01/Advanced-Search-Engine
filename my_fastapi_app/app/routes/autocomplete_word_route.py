@@ -79,6 +79,8 @@ def get_gpt2_suggestions(request: SuggestRequest, db: Session = Depends(get_db))
         next_word_dict[w1].append((w2, freq))
 
     # Step 3: Get last word from prompt
+    if not request.prompt:
+        request.prompt=" "
     last_word = request.prompt.strip().lower().split()[-1]
     candidates = sorted(next_word_dict.get(last_word, []), key=lambda x: -x[1])
     candidate_words = [word for word, _ in candidates[:request.top_k]]

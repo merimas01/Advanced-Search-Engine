@@ -94,7 +94,7 @@ const ProductGrid = () => {
 
   const fetchFilteredProducts = (e, page = 1) => {
     console.log("search", search);
-    let cleaned = e.target.value.trimEnd();
+    let cleaned = e.trimEnd();
     console.log("cleaned", cleaned);
     setFullStringSearch(cleaned);
     console.log("full string", fullStringSearch);
@@ -134,6 +134,7 @@ const ProductGrid = () => {
       })
       .then((res) => res.json())
       .then((data) => {
+        console.log("data", data);
         setFilteredProducts(data.results || data);
         setUseFiltered(true);
       })
@@ -174,7 +175,7 @@ const ProductGrid = () => {
     console.log("search", search.length);
 
     // Trigger autocomplete only when user finishes a word
-    if (newValue.endsWith(" ")) {
+    if (newValue.endsWith(" ") && newValue.trim() !== "") {
       fetchAutocompleteSuggestions(newValue.trim());
     }
     else {
@@ -184,8 +185,9 @@ const ProductGrid = () => {
   };
 
   const fetchAutocompleteSuggestions = (inputText) => {
+    let cleaned = inputText.trim();
     console.log("input text", inputText.length);
-    setFullStringSearch(inputText);
+    setFullStringSearch(cleaned);
 
     if (inputText.trim() == "") {
       setCorrectText("");
@@ -197,7 +199,7 @@ const ProductGrid = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: inputText,
+        text: cleaned,
       }),
     })
       .then((res) => res.json())
@@ -306,13 +308,15 @@ const ProductGrid = () => {
   const handlePageChange = (e, page, totalPages) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
+    setFullStringSearch(e);
     fetchFilteredProducts(e, page);
   };
 
   return (
     <>
       <div className="title">
-        <h1>Everything in one place!</h1>
+        <h1>Welcome to the eShop!</h1>
+        <h5>Search for whatever you want here.</h5>
       </div>
 
       <div style={{ padding: "20px", textAlign: "center" }}>
@@ -325,7 +329,7 @@ const ProductGrid = () => {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               setIsEnter(true);
-              search == "" || search.trim() == "" ? fetchProducts() : fetchFilteredProducts(e, 1); setCurrentPage(1);
+              search == "" || search.trim() == "" ? fetchProducts() : fetchFilteredProducts(search, 1); setCurrentPage(1);
               insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
             }
           }}
@@ -347,59 +351,67 @@ const ProductGrid = () => {
           <FiSearch className="search-icon" />
         </button> */}
       </div>
+      {/* 
+      <SpeechRecognizer /> */}
 
-      <SpeechRecognizer />
+      {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText">{correctText}</h4> <h6>?</h6></div>}
 
-      {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText">{correctText}</h4></div>}
+      <div className="history-and-autocomplete">
 
+        {searchHistory.length > 0 && (
+          <div className="searchHistory-wrapper">
+            <h6>Your search history:</h6>
+            <ul className="searchHistory-list">
+              {searchHistory.map((obj, index) => (
+                <li key={index} onClick={() => {
+                  setSearch(obj.SearchInput); setFullStringSearch(obj.SearchInput);
+                }}>
+                  {obj.SearchInput}
+                  <button
+                    onClick={() => handleDeleteSearchItem(obj.SearchHistoryID)}
+                    className="delete-btn"
+                  >
+                    &#x2715;
+                  </button>
+                </li>
+              ))}
+            </ul>
 
-      {searchHistory.length > 0 && (
-        <div className="searchHistory-wrapper">
-          <h6>Your search history:</h6>
-          <ul className="searchHistory-list">
-            {searchHistory.map((obj, index) => (
-              <li key={index} onClick={() => { setSearch(obj.SearchInput); setFullStringSearch(obj.SearchInput); }}>
-                {obj.SearchInput}
-                <button
-                  onClick={() => handleDeleteSearchItem(obj.SearchHistoryID)}
-                  className="delete-btn"
+          </div>
+        )}
+
+        {suggestions.length > 0 && (
+          <div className="autocomplete-wrapper">
+            <h6>Search suggestions:</h6>
+            <ul className="autocomplete-list">
+              {suggestions.map(({ suggestion }, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    const newSearch = correctText + " " + suggestion + " ";
+                    setSearch(newSearch);
+                    setFullStringSearch(newSearch);
+                    setCorrectText(newSearch);
+                    setSuggestions([]);
+                  }}
                 >
-                  &#x2715;
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  {correctText !== fullStringSearch ? (
+                    <b>{correctText} {suggestion}</b>
+                  ) : (
+                    <>
+                      {fullStringSearch} <b>{suggestion}</b>
+                    </>
+                  )}
 
-      {suggestions.length > 0 && (
-        <div className="autocomplete-wrapper">
-          <h6>Search suggestions:</h6>
-          <ul className="autocomplete-list">
-            {suggestions.map(({ suggestion }, index) => (
-              <li
-                key={index}
-                onClick={() => {
-                  const newSearch = correctText + " " + suggestion + " ";
-                  setSearch(newSearch);
-                  setFullStringSearch(newSearch);
-                  setSuggestions([]);
-                }}
-              >
-                {correctText !== fullStringSearch ? (
-                  <b>{correctText} {suggestion}</b>
-                ) : (
-                  <>
-                    {fullStringSearch} <b>{suggestion}</b>
-                  </>
-                )}
+                </li>
+              ))}
+            </ul>
 
-              </li>
-            ))}
-          </ul>
+          </div>
+        )}
 
-        </div>
-      )}
+
+      </div>
 
 
 
@@ -460,7 +472,7 @@ const ProductGrid = () => {
       {useFiltered &&
         <div className="pagination">
           <button
-            onClick={(e) => handlePageChange(e, currentPage - 1, totalPages)}
+            onClick={(e) => handlePageChange(search, currentPage - 1, totalPages)}
             disabled={currentPage === 1}
             className="pagination-btn"
           >
@@ -470,7 +482,7 @@ const ProductGrid = () => {
           <span className="page-number">{currentPage}</span>
 
           <button
-            onClick={(e) => handlePageChange(e, currentPage + 1, totalPages)}
+            onClick={(e) => handlePageChange(search, currentPage + 1, totalPages)}
             disabled={currentPage === totalPages}
             className="pagination-btn"
           >

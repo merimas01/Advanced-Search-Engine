@@ -145,7 +145,7 @@ def seed_all_data():
     standard = ProductLabel(LabelName="Standard")
     sale = ProductLabel(LabelName="Sale")
     new = ProductLabel(LabelName="New")
-    super_price = ProductLabel(LabelName="Super price")
+    super_price = ProductLabel(LabelName="Promo")
     session.add_all([standard, sale, new, super_price])
     session.flush()
 
