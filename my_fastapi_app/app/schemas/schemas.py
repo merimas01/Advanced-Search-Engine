@@ -12,6 +12,15 @@ class SubCategoryOut(BaseModel):
         from_attributes = True
 
 
+class CategoryOut(BaseModel):
+    CategoryID: int
+    CategoryName: str
+    SubCategory: List[SubCategoryOut]
+
+    class Config:
+        from_attributes = True
+
+
 class ProductColorOut(BaseModel):
     ProductColorID: int
     ColorName: str
@@ -36,11 +45,13 @@ class ProductImageOut(BaseModel):
     class Config:
         from_attributes = True
 
+
 class ProductImageCreate(BaseModel):
-    ImageBase64 : Optional[bytes]
-      
+    ImageBase64: Optional[bytes]
+
     class Config:
         from_attributes = True
+
 
 class ProductDepartmentOut(BaseModel):
     ProductDepartmentID: int

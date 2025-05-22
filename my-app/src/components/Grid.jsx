@@ -3,19 +3,17 @@ import "./Grid.css";
 import { FiSearch } from "react-icons/fi";
 import { FiX } from "react-icons/fi";
 import { FaMicrophone } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const ProductGrid = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [useFiltered, setUseFiltered] = useState(false);
   const [search, setSearch] = useState("");
   const [fullStringSearch, setFullStringSearch] = useState("");
   const [correctText, setCorrectText] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchHistory, setSearchHistory] = useState([]);
-  const totalPages = 2; //top_k/items_per_page
+  const [categories, setCategories] = useState([]);
   const user_id = 12;
-  const [isEnter, setIsEnter] = useState(false);
+  const navigate = useNavigate();
 
   const getSearchHistory = () => {
     let string = search ? search : "";
@@ -25,7 +23,7 @@ const ProductGrid = () => {
         setSearchHistory(data || []);
         console.log("search history", data);
       })
-      .catch((err) => console.error("Error fetching products:", err));
+      .catch((err) => console.error("Error fetching search history:", err));
   };
 
 
@@ -67,7 +65,6 @@ const ProductGrid = () => {
     })
       .then((res) => {
         if (res.ok) {
-          // Optionally update local state
           setSearchHistory((prev) =>
             prev.filter((item) => item.SearchHistoryID !== id)
           );
@@ -79,29 +76,9 @@ const ProductGrid = () => {
 
   };
 
-  const fetchProducts = () => {
-    fetch("http://127.0.0.1:8000/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setUseFiltered(false);
-        setCorrectText("");
-      })
-      .catch((err) => console.error("Error fetching products:", err));
-  };
-
   let correctedText = "";
 
-  const fetchFilteredProducts = (e, page = 1) => {
-    console.log("search", search);
-    let cleaned = e.trimEnd();
-    console.log("cleaned", cleaned);
-    setFullStringSearch(cleaned);
-    console.log("full string", fullStringSearch);
-
-    if (search.trim() == "") {
-      setCorrectText("");
-    }
+  const spellCorrection = (e) => {
 
     fetch("http://127.0.0.1:8000/correct-text", {
       method: "POST",
@@ -109,7 +86,7 @@ const ProductGrid = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: cleaned,
+        text: e,
       }),
     })
       .then((res) => res.json())
@@ -118,28 +95,11 @@ const ProductGrid = () => {
         console.log("correctedText", correctedText);
         setCorrectText(data.corrected_text);
         console.log("correct text", correctText);
-
-        return fetch("http://127.0.0.1:8000/semantic-search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: data.corrected_text,
-            top_k: 20,
-            page: page,
-            items_per_page: 10,
-          }),
-        });
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data", data);
-        setFilteredProducts(data.results || data);
-        setUseFiltered(true);
-      })
+        navigate(`/results/${correctedText}`);
+      }
+      )
       .catch((err) => console.error("Error in filtering flow:", err));
-  };
+  }
 
   const fetchSpeechRecognitionProducts = (transcript, page = 1) => {
 
@@ -165,7 +125,6 @@ const ProductGrid = () => {
   };
 
   const [suggestions, setSuggestions] = useState([]);
-  const [nextWord, setNextWord] = useState("");
 
   const handleSearchChange = (e) => {
     const newValue = e.target.value;
@@ -179,7 +138,6 @@ const ProductGrid = () => {
       fetchAutocompleteSuggestions(newValue.trim());
     }
     else {
-      setNextWord("");
       setSuggestions([]);
     }
   };
@@ -228,27 +186,6 @@ const ProductGrid = () => {
         setSuggestions(data.suggestions || []);
       })
       .catch((err) => console.error("Error in filtering flow:", err));
-
-
-    // fetch("http://127.0.0.1:8000/gpt2-suggestions", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     prompt: inputText,
-    //     top_k: 5
-    //   }),
-    // }).
-    //   then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //     console.log(data.suggestions);
-    //     setSuggestions(data.suggestions || []);
-    //   })
-    //   .catch((err) => console.error("Error in autocomplete method:", err));
-
-
   };
 
   const SpeechRecognizer = () => {
@@ -298,25 +235,28 @@ const ProductGrid = () => {
   }
 
   useEffect(() => {
-    fetchProducts(); // initial load
+    // initial load
+    // getCategories();
   }, []);
 
 
-  const displayedProducts = useFiltered ? filteredProducts : products;
+  // const getCategories = () => {
+  //   fetch('http://127.0.0.1:8000/categories')
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setCategories(data || []);
+  //       console.log("categories", data);
+  //     })
+  //     .catch((err) => console.error("Error fetching categories:", err));
+  // };
 
-
-  const handlePageChange = (e, page, totalPages) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    setFullStringSearch(e);
-    fetchFilteredProducts(e, page);
-  };
 
   return (
     <>
+
       <div className="title">
-        <h1>Welcome to the eShop!</h1>
-        <h5>Search for whatever you want here.</h5>
+        <h1>Welcome to the eShop! 🏬</h1>
+        <h5>The place where you can find dozens of the best quality products. </h5>
       </div>
 
       <div style={{ padding: "20px", textAlign: "center" }}>
@@ -325,12 +265,14 @@ const ProductGrid = () => {
           type="text"
           placeholder="🔍 Search products..."
           value={search}
-          onChange={(e) => { setIsEnter(false); handleSearchChange(e); handleSearchHistoryChange(e); }} //setSearch(e.target.value);
+          onChange={(e) => { handleSearchChange(e); handleSearchHistoryChange(e); }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              setIsEnter(true);
-              search == "" || search.trim() == "" ? fetchProducts() : fetchFilteredProducts(search, 1); setCurrentPage(1);
               insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
+              if (search.trim() !== "") {
+                spellCorrection(search);
+
+              }
             }
           }}
         />
@@ -340,21 +282,19 @@ const ProductGrid = () => {
           </button>
         )}
 
-        {/* Inline suggestion ghost text */}
-
-
         {/* <button className="btn-microphone" onClick={() =>
           SpeechRecognizer()
         }>  <FaMicrophone size={24} /></button> */}
 
-        {/* <button type="button" className="searchButton" onClick={() => { search == "" ? fetchProducts() : fetchFilteredProducts(); setCurrentPage(1); setFullStringSearch(search); }} >
-          <FiSearch className="search-icon" />
-        </button> */}
       </div>
       {/* 
       <SpeechRecognizer /> */}
 
-      {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText">{correctText}</h4> <h6>?</h6></div>}
+      {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText" onClick={() => {
+        setSearch(correctText);
+        console.log("search", search);
+        setFullStringSearch(correctText);
+      }}>{correctText}</h4></div>}
 
       <div className="history-and-autocomplete">
 
@@ -365,8 +305,9 @@ const ProductGrid = () => {
               {searchHistory.map((obj, index) => (
                 <li key={index} onClick={() => {
                   setSearch(obj.SearchInput); setFullStringSearch(obj.SearchInput);
+                  spellCorrection(obj.SearchInput);
                 }}>
-                  {obj.SearchInput}
+                  🕒 {obj.SearchInput}
                   <button
                     onClick={() => handleDeleteSearchItem(obj.SearchHistoryID)}
                     className="delete-btn"
@@ -393,10 +334,12 @@ const ProductGrid = () => {
                     setFullStringSearch(newSearch);
                     setCorrectText(newSearch);
                     setSuggestions([]);
+                    spellCorrection(newSearch);
                   }}
-                >
+                > 🔎
                   {correctText !== fullStringSearch ? (
-                    <b>{correctText} {suggestion}</b>
+                    <>
+                      <b>{correctText} {suggestion}</b> </>
                   ) : (
                     <>
                       {fullStringSearch} <b>{suggestion}</b>
@@ -409,87 +352,45 @@ const ProductGrid = () => {
 
           </div>
         )}
-
-
       </div>
 
 
-
-      <div className="grid-container">
-        {displayedProducts.map((product) => (
-          <div key={product.ProductID} className="product-card">
-            <div>
-              {product.ProductLabel.LabelName == "Sale" && (
-                <h4 className="productLabel" id="sale">
-                  {product.ProductLabel.LabelName}
-                </h4>
-              )}
-              {product.ProductLabel.LabelName == "New" && (
-                <h4 className="productLabel" id="new">
-                  {product.ProductLabel.LabelName}
-                </h4>
-              )}
-            </div>
-
-            <div className="productImage">
-              {product.ProductImage.ImageBase64 == null ? (
-                <img
-                  src="src/assets/no-image.svg" //src/assets/no-image.svg
-                  alt={product.ProductName}
-                  className="product-image"
-                />
-              ) : (
-                <img
-                  src={product.ProductImage.ImageBase64} //`data:image/jpeg;base64${product.ProductImage.ImageBase64}`
-                  alt={product.ProductName}
-                  className="product-image"
-                />
-              )}
-            </div>
-
-            <div className="productName">
-              <h3 className="product-name">{product.ProductName}</h3>
-            </div>
-            <p className="productCaption">{product.ProductCaption}</p>
-
-            {product.ProductLabel.LabelName == "Sale" && (
-              <h5>
-                <s className="crossedPrice">${product.ProductPrice}</s>
-              </h5>
-            )}
-            {product.ProductLabel.LabelName == "Sale" && <br></br>}
-            {product.ProductLabel.LabelName == "Sale" ? (
-              <h5 className="productPrice" id="newPrice">
-                ${product.NewPrice}
-              </h5>
-            ) : (
-              <h5 className="productPrice">${product.ProductPrice}</h5>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {useFiltered &&
-        <div className="pagination">
-          <button
-            onClick={(e) => handlePageChange(search, currentPage - 1, totalPages)}
-            disabled={currentPage === 1}
-            className="pagination-btn"
-          >
-            &#8592;
-          </button>
-
-          <span className="page-number">{currentPage}</span>
-
-          <button
-            onClick={(e) => handlePageChange(search, currentPage + 1, totalPages)}
-            disabled={currentPage === totalPages}
-            className="pagination-btn"
-          >
-            &#8594;
-          </button>
+      <div className="image-text">
+        <div className="title-image">
+          <h4 style={{ textTransform: "uppercase" }}>A big sale!</h4>
+          <h6>Find the desirable products at the lowest prices!</h6>
+          <button className="btn-searchNew" onClick={() => { navigate(`/results/sale`); }}>Search now 🡺 </button>
         </div>
-      }
+
+        <div className="image-container">
+          <img
+            src="src/assets/sale.png"
+            alt="name"
+            className="big-image"
+          />
+        </div>
+
+      </div>
+
+      {/* <div className="categories">
+        {categories.length > 0 && (
+          <div className="categories-wrapper">
+            <h6>Categories:</h6>
+            <ul className="category-list">
+              {categories.map(({ CategoryName }, index) => (
+                <li
+                  key={index}
+                >
+                  <>
+                    <b>{CategoryName}</b> </>
+                </li>
+              ))}
+            </ul>
+
+          </div>
+        )}
+      </div> */}
+
     </>
 
   );

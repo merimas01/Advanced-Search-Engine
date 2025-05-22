@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
-from app.models.generated_models import Product, ProductImage, SearchHistory
-from app.schemas.schemas import ProductImageCreate, ProductImageOut, ProductOut, SearchHistoryCreate, SearchHistoryOut
+from app.models.generated_models import Category, Product, ProductImage, SearchHistory
+from app.schemas.schemas import CategoryOut, ProductImageCreate, ProductImageOut, ProductOut, SearchHistoryCreate, SearchHistoryOut
 
 router = APIRouter()
 
@@ -26,6 +26,19 @@ def get_products(db: Session = Depends(get_db)):
         .all()
     )
     return products
+
+
+# Get all categories
+@router.get("/categories", response_model=List[CategoryOut])
+def get_categories(db: Session = Depends(get_db)):
+    categories = (
+        db.query(Category)
+        .options(
+            joinedload(Category.SubCategory),          
+        )
+        .all()
+    )
+    return categories
 
 
 # Get product by ID

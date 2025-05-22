@@ -3,7 +3,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px 0;
+  padding: 30px;
+  margin-top: 2%;
 }
 
 .product-card {
@@ -19,7 +20,6 @@
 
 .productImage {
   height: 50%;
-
 }
 
 .grid-container {
@@ -49,12 +49,6 @@
 .search-icon {
   width: 60px;
   height: 25px;
-}
-
-.searchButton {
-  border: none;
-  background-color: transparent;
-  padding: 10px 0;
 }
 
 .pagination {
@@ -93,8 +87,6 @@
 .product-name {
   text-align: center;
 }
-
-
 
 .productCaption {
   text-align: center;
@@ -142,7 +134,8 @@
   gap: 10px;
   align-items: baseline;
   justify-content: center;
-  cursor: default;
+  cursor: pointer;
+  margin-bottom: 2%;
 }
 
 .correctText {
@@ -157,20 +150,13 @@
   color: #999;
 }
 
-/* .history-and-autocomplete{
-  display: flex;
-  justify-content: space-between;
-} */
-
 .autocomplete-wrapper,
 .searchHistory-wrapper {
   padding: 1%;
   display: grid;
-  background-color: #ddd;
-  /* display: grid;
-  grid-template-rows: auto auto; */
+  /* background-color: #ddd; */
+  /* grid-template-rows: auto auto; */
   row-gap: 10px;
-  /* space between h6 and ul */
   /* width: 50%; */
 }
 
@@ -184,11 +170,10 @@
 .searchHistory-list {
   list-style: none;
   padding: 1px;
-
   margin: auto;
-
   width: 50%;
-  background: #f8f8f8;
+  /* background: #f8f8f8; */
+  background: white;
   border: 1px solid #ccc;
 
 }
@@ -229,4 +214,82 @@
 
 .btn-microphone:hover {
   color: black;
+}
+
+.titleResults,
+.goBack {
+  width: 30%;
+  margin: 2%;
+}
+
+.titleResults {
+  background-color: rgb(70, 70, 255);
+  color: #f5f4f4;
+  padding: 2%;
+  border-top-left-radius: 20%;
+  border-bottom-right-radius: 20%;
+  text-transform: uppercase;
+}
+
+.image-text {
+  position: relative;
+  background-color: #ccc;
+  border: solid 1px grey;
+  margin: 3% 1%;
+}
+
+.title-image {
+  position: absolute;
+  top: 23%;
+  left: 60%;
+  /* transform: translate(-50%, -50%); */
+  padding: 3%;
+  text-align: center;
+  z-index: 1;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  background-color: rgba(130, 130, 122, 0.4);
+  border-radius: 10px;
+}
+
+.image-container {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+.image-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('src/assets/electronic.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(5px);
+  z-index: 0;
+}
+
+.image-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+.big-image {
+  height: 100%;
+  width: 40%;
+}
+
+.btn-searchNew {
+  padding: 3%;
+  width: 130px;
+  border: solid 1px rgb(228, 23, 23);
+  background: rgb(228, 23, 23);
+  cursor: pointer;
+  border-radius: 10px;
+  color: white;
 }
