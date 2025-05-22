@@ -105,7 +105,7 @@ ALTER TABLE ProductImage
 ADD ImagePath NVARCHAR(255) NULL
 
 
--- to delete all the data:
+-- to delete all data:
 
 delete from ProductSize
 delete from Product
