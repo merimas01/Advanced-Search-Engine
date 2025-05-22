@@ -271,13 +271,12 @@ const ProductGrid = () => {
               insertSearchHistory(); setSearchHistory([]); setSuggestions([]);
               if (search.trim() !== "") {
                 spellCorrection(search);
-
               }
             }
           }}
         />
         {search && (
-          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setSuggestions([]); setUseFiltered(false); }} className="clear-button">
+          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setSuggestions([]); }} className="clear-button">
             <FiX />
           </button>
         )}

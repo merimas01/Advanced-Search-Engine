@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "./Grid.css";
 
 function ResultsProducts() {
@@ -8,6 +9,7 @@ function ResultsProducts() {
     const totalPages = 2; //top_k/items_per_page
     const [currentPage, setCurrentPage] = useState(1);
     const [correctText, setCorrectText] = useState("");
+    const navigate = useNavigate();
 
     let correctedText = "";
 
@@ -77,8 +79,7 @@ function ResultsProducts() {
     return <>
         <h2 className='titleResults'> {search}</h2>
         <div className='goBack'>
-            <Link to="/">⬅️ Go back to home page</Link>
-
+            <button onClick={() => { navigate("/"); }} className='btn-homepage'>⬅️ Go back to the home page</button>
         </div>
 
 
@@ -93,6 +94,11 @@ function ResultsProducts() {
                         )}
                         {product.ProductLabel.LabelName == "New" && (
                             <h4 className="productLabel" id="new">
+                                {product.ProductLabel.LabelName}
+                            </h4>
+                        )}
+                        {product.ProductLabel.LabelName == "Promo" && (
+                            <h4 className="productLabel" id="promo">
                                 {product.ProductLabel.LabelName}
                             </h4>
                         )}

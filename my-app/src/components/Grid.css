@@ -116,7 +116,7 @@
   position: absolute;
   top: 2%;
   padding: 2%;
-  border-radius: 10%;
+  border-radius: 10px;
   font-weight: 300;
 }
 
@@ -126,6 +126,10 @@
 
 #new {
   background-color: rgb(255, 251, 127);
+}
+
+#promo{
+  background-color: rgb(112, 198, 255);
 }
 
 .didYouMean {
@@ -226,8 +230,8 @@
   background-color: rgb(70, 70, 255);
   color: #f5f4f4;
   padding: 2%;
-  border-top-left-radius: 20%;
-  border-bottom-right-radius: 20%;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
   text-transform: uppercase;
 }
 
@@ -292,4 +296,10 @@
   cursor: pointer;
   border-radius: 10px;
   color: white;
+}
+
+.btn-homepage{
+  background: none;
+  border: none;
+  color: blue;
 }

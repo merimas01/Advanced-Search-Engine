@@ -617,6 +617,59 @@ def seed_all_data():
         NewPrice=749.00,
         ProductLabelID=new.ProductLabelID,
     )
+
+    iphone15 = Product(
+        ProductName="iPhone 15 Pro Max",
+        ProductCaption="Apple iPhone 15 Pro Max 256GB - Titanium Blue",
+        ProductPrice=1299.99,
+        ProductBrandID=apple.ProductBrandID,
+        ProductColorID=red.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_mobile.ProductImageID,
+        SubCategoryID=mobiles.SubCategoryID,
+        NewPrice=None,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    samsungqled = Product(
+        ProductName='Samsung QLED 4K TV 55"',
+        ProductCaption="Samsung QLED Smart TV with Quantum Dot technology",
+        ProductPrice=1399.00,
+        ProductBrandID=samsung.ProductBrandID,
+        ProductColorID=blue.ProductColorID,
+        ProductDepartmentID=tech.ProductDepartmentID,
+        ProductImageID=image_tv.ProductImageID,
+        SubCategoryID=tv.SubCategoryID,
+        NewPrice=None,
+        ProductLabelID=super_price.ProductLabelID,
+    )
+
+    nikeairmax = Product(
+        ProductName="Nike Air Max 270",
+        ProductCaption="Nike Air Max 270 men's sneakers - breathable and stylish",
+        ProductPrice=149.99,
+        ProductBrandID=nike.ProductBrandID,
+        ProductColorID=black.ProductColorID,
+        ProductDepartmentID=wear.ProductDepartmentID,
+        ProductImageID=image_shoes.ProductImageID,
+        SubCategoryID=clothing.SubCategoryID,
+        NewPrice=None,
+        ProductLabelID=new.ProductLabelID,
+    )
+
+    adidastshirt = Product(
+        ProductName="Adidas Performance T-Shirt",
+        ProductCaption="Lightweight and breathable Adidas T-shirt for workouts",
+        ProductPrice=29.99,
+        ProductBrandID=adidas.ProductBrandID,
+        ProductColorID=white.ProductColorID,
+        ProductDepartmentID=wear.ProductDepartmentID,
+        ProductImageID=image_shirt.ProductImageID,
+        SubCategoryID=clothing.SubCategoryID,
+        NewPrice=None,
+        ProductLabelID=super_price.ProductLabelID,
+    )
+
     session.add_all(
         [
             iphone,
@@ -655,6 +708,10 @@ def seed_all_data():
             bose_quietcomfort_45,
             lg_cinebeam_projector,
             apple_watch_ultra,
+            iphone15,
+            samsungqled,
+            nikeairmax,
+            adidastshirt,
         ]
     )
     session.flush()
