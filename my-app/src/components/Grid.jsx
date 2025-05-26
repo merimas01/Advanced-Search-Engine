@@ -230,51 +230,51 @@ const ProductGrid = () => {
     );
   };
 
-  const SpeechRecognizer = () => {
-    const [transcript, setTranscript] = useState("");
-    const [listening, setListening] = useState(false);
+  // const SpeechRecognizer = () => {
+  //   const [transcript, setTranscript] = useState("");
+  //   const [listening, setListening] = useState(false);
 
-    const startListening = () => {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
+  //   const startListening = () => {
+  //     const SpeechRecognition =
+  //       window.SpeechRecognition || window.webkitSpeechRecognition;
 
-      if (!SpeechRecognition) {
-        alert("Your browser does not support Speech Recognition");
-        return;
-      }
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+  //     if (!SpeechRecognition) {
+  //       alert("Your browser does not support Speech Recognition");
+  //       return;
+  //     }
+  //     const recognition = new SpeechRecognition();
+  //     recognition.lang = "en-US";
+  //     recognition.interimResults = false;
+  //     recognition.maxAlternatives = 1;
 
-      recognition.onresult = (event) => {
-        const speechResult = event.results[0][0].transcript;
-        setTranscript(speechResult);
-        console.log("Recognized:", speechResult);
-      };
+  //     recognition.onresult = (event) => {
+  //       const speechResult = event.results[0][0].transcript;
+  //       setTranscript(speechResult);
+  //       console.log("Recognized:", speechResult);
+  //     };
 
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error", event.error);
-      };
+  //     recognition.onerror = (event) => {
+  //       console.error("Speech recognition error", event.error);
+  //     };
 
-      recognition.onend = () => {
-        setListening(false);
-      };
+  //     recognition.onend = () => {
+  //       setListening(false);
+  //     };
 
-      recognition.start();
-      setListening(true);
-    };
+  //     recognition.start();
+  //     setListening(true);
+  //   };
 
-    return (
-      <div>
-        <button onClick={startListening} disabled={listening}>
-          {listening ? "Listening..." : "Start Listening"}
-        </button>
-        <p>Transcript: {transcript}</p>
-        {transcript && <button onClick={(e) => { setSearch(transcript); fetchSpeechRecognitionProducts(transcript, 1); setCorrectText(""); }} >Filter data</button>}
-      </div>
-    );
-  }
+  //   return (
+  //     <div>
+  //       <button onClick={startListening} disabled={listening}>
+  //         {listening ? "Listening..." : "Start Listening"}
+  //       </button>
+  //       <p>Transcript: {transcript}</p>
+  //       {transcript && <button onClick={(e) => { setSearch(transcript); fetchSpeechRecognitionProducts(transcript, 1); setCorrectText(""); }} >Filter data</button>}
+  //     </div>
+  //   );
+  // }
 
   useEffect(() => {
     // initial load
