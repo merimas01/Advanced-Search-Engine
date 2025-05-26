@@ -11,6 +11,7 @@ const ProductGrid = () => {
   const [fullStringSearch, setFullStringSearch] = useState("");
   const [correctText, setCorrectText] = useState("");
   const [searchHistory, setSearchHistory] = useState([]);
+  const [voiceTranscription, setVoiceTranscription] = useState("");
   const [categories, setCategories] = useState([]);
   const user_id = 12;
   const navigate = useNavigate();
@@ -188,6 +189,47 @@ const ProductGrid = () => {
       .catch((err) => console.error("Error in filtering flow:", err));
   };
 
+
+
+  const AudioSearch = () => {
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleSearch = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://127.0.0.1:8000/audio/search', {
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setResult(data);
+      } catch (error) {
+        console.error("Error calling audio search:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className="audioSearch">
+        <button style={{ color: loading ? 'black' : 'grey' }} className="btn-microphone" onClick={handleSearch}>  <FaMicrophone size={24} /></button>
+        {loading && <p>Recording and transcribing...</p>}
+        {result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
+        {/* {result && (
+          <div>
+            <p><strong>Transcription:</strong> {result.transcription}</p>
+            <p><strong>Keywords Found:</strong> {result.keywords_found.join(', ')}</p>
+          </div>
+        )} */}
+      </div>
+    );
+  };
+
   const SpeechRecognizer = () => {
     const [transcript, setTranscript] = useState("");
     const [listening, setListening] = useState(false);
@@ -256,10 +298,10 @@ const ProductGrid = () => {
 
       <div className="title">
         <h1>Welcome to the eShop! 🏬</h1>
-        <h5>The place where you can find dozens of the best quality products. </h5>
+        <h5>The place where you can find dozens of the high quality products. </h5>
       </div>
 
-      <div style={{ padding: "20px", textAlign: "center" }}>
+      <div style={{ padding: "20px", textAlign: "center" }} className="searchEngine-div">
         <input
           className="search-container"
           type="text"
@@ -280,14 +322,8 @@ const ProductGrid = () => {
             <FiX />
           </button>
         )}
-
-        {/* <button className="btn-microphone" onClick={() =>
-          SpeechRecognizer()
-        }>  <FaMicrophone size={24} /></button> */}
-
+        <AudioSearch />
       </div>
-      {/* 
-      <SpeechRecognizer /> */}
 
       {correctText && correctText.trim() !== "" && correctText !== fullStringSearch && fullStringSearch !== "" && <div className="didYouMean"><h6>Did you mean: </h6> <h4 className="correctText" onClick={() => {
         setSearch(correctText);

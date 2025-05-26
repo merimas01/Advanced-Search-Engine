@@ -48,7 +48,7 @@ function ResultsProducts() {
                         query: data.corrected_text,
                         top_k: 20,
                         page: page,
-                        items_per_page: 10,
+                        items_per_page: 12,
                     }),
                 });
             })
@@ -61,8 +61,6 @@ function ResultsProducts() {
             .catch((err) => console.error("Error in filtering flow:", err));
     };
 
-
-
     const handlePageChange = (e, page, totalPages) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
@@ -71,6 +69,7 @@ function ResultsProducts() {
 
 
     useEffect(() => {
+        if(search!=null || search!="")
         fetchFilteredProducts(search, 1); // initial load
     }, []);
 
@@ -124,6 +123,7 @@ function ResultsProducts() {
                         <h3 className="product-name">{product.ProductName}</h3>
                     </div>
                     <p className="productCaption">{product.ProductCaption}</p>
+                    <p className='productColor' style={{ background: product.ProductColor.ColorName, color: product.ProductColor.ColorName }}>.</p>
 
                     {product.ProductLabel.LabelName == "Sale" && (
                         <h5>

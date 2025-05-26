@@ -7,6 +7,12 @@
   margin-top: 2%;
 }
 
+.searchEngine-div{
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
+
 .product-card {
   background-color: white;
   position: relative;
@@ -99,7 +105,7 @@
   left: 5%;
   text-align: center;
   font-weight: 700;
-  color: grey;
+ 
 }
 
 #newPrice {
@@ -110,6 +116,7 @@
   position: absolute;
   bottom: 2%;
   right: 5%;
+  color: grey;
 }
 
 .productLabel {
@@ -130,6 +137,17 @@
 
 #promo{
   background-color: rgb(112, 198, 255);
+}
+
+.productColor{
+  width: 20px;
+  height:20px;
+  text-align: center;
+  border-radius: 10px;
+  border: solid 1px black;
+  position: absolute;
+  top:3%;
+  left:85%;
 }
 
 .didYouMean {
@@ -213,11 +231,6 @@
   border: none;
   cursor: pointer;
   font-size: 18px;
-  color: #999;
-}
-
-.btn-microphone:hover {
-  color: black;
 }
 
 .titleResults,
