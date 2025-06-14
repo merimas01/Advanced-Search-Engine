@@ -267,3 +267,5 @@ shorts 1
 women 1
 on 1
 move 1
+products 1
+items 1

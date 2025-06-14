@@ -207,6 +207,7 @@ const ProductSearch = () => {
 
         const data = await response.json();
         setResult(data);
+        console.log(data);
       } catch (error) {
         console.error("Error calling audio search:", error);
       } finally {
@@ -223,7 +224,7 @@ const ProductSearch = () => {
           {loading && <button style={{ color: 'red', background: 'none', border: 'none', fontSize: '18px' }} onClick={() => 
             { setLoading(false); }}>  <FiX /></button>}
         </div>
-        {loading && result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
+        {loading==false && result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
         {/* {result && (
           <div>
             <p><strong>Transcription:</strong> {result.transcription}</p>
@@ -404,7 +405,7 @@ const ProductSearch = () => {
 
         <div className="image-container">
           <img
-            src="src/assets/sale.png"
+            src="src/assets/sale2.jpg"
             alt="name"
             className="big-image"
           />

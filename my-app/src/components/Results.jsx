@@ -14,9 +14,9 @@ function SearchResults() {
     let correctedText = "";
 
     const fetchFilteredProducts = (e, page = 1) => {
-        console.log("search", search);
+       // console.log("search", search);
         let cleaned = e.trimEnd();
-        console.log("cleaned", cleaned);
+       // console.log("cleaned", cleaned);
 
 
         if (search.trim() == "") {
@@ -35,9 +35,9 @@ function SearchResults() {
             .then((res) => res.json())
             .then((data) => {
                 correctedText = data.corrected_text;
-                console.log("correctedText", correctedText);
+              //  console.log("correctedText", correctedText);
                 setCorrectText(data.corrected_text);
-                console.log("correct text", correctText);
+            //    console.log("correct text", correctText);
 
                 return fetch("http://127.0.0.1:8000/semantic-search", {
                     method: "POST",
@@ -76,7 +76,10 @@ function SearchResults() {
 
 
     return <>
-        <h2 className='titleResults'> {search}</h2>
+     <h1 className="titleResults text-4xl font-bold text-gray-800 tracking-tight leading-snug mb-4">
+      {search}
+    </h1>
+        
         <div className='goBack'>
             <button onClick={() => { navigate("/"); }} className='btn-homepage'>⬅️ Go back to the home page</button>
         </div>
