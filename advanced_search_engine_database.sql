@@ -105,6 +105,8 @@ ALTER TABLE ProductImage
 ADD ImagePath NVARCHAR(255) NULL
 
 
+use AdvancedSearchEngine
+
 -- to delete all data:
 
 delete from ProductSize
@@ -117,5 +119,7 @@ delete from ProductDepartment
 delete from ProductImage
 delete from SubCategory
 delete from Category
+
+select* from Product
 
 

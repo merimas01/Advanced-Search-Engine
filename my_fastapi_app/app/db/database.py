@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+import os
 
-SERVER = "localhost"
-DATABASE = "AdvancedSearchEngine"
-USERNAME = "sa"
-PASSWORD = "mySqlP4ssword!"
+SERVER = os.getenv("DATABASE_SERVER")
+DATABASE = os.getenv("DATABASE_NAME")
+USERNAME = os.getenv("DATABASE_USERNAME")
+PASSWORD = os.getenv("DATABASE_PASSWORD")
    
 DATABASE_URL = (
     f"mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}"

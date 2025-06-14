@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./Grid.css";
-import { FiSearch } from "react-icons/fi";
+import "./Style.css";
 import { FiX } from "react-icons/fi";
 import { FaMicrophone } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
-const ProductGrid = () => {
+const ProductSearch = () => {
   const [search, setSearch] = useState("");
   const [fullStringSearch, setFullStringSearch] = useState("");
   const [correctText, setCorrectText] = useState("");
@@ -102,28 +100,28 @@ const ProductGrid = () => {
       .catch((err) => console.error("Error in filtering flow:", err));
   }
 
-  const fetchSpeechRecognitionProducts = (transcript, page = 1) => {
+  // const fetchSpeechRecognitionProducts = (transcript, page = 1) => {
 
-    return fetch("http://127.0.0.1:8000/semantic-search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: transcript,
-        top_k: 20,
-        page: page,
-        items_per_page: 10,
-      }),
-    })
+  //   return fetch("http://127.0.0.1:8000/semantic-search", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       query: transcript,
+  //       top_k: 20,
+  //       page: page,
+  //       items_per_page: 10,
+  //     }),
+  //   })
 
-      .then((res) => res.json())
-      .then((data) => {
-        setFilteredProducts(data.results || data);
-        setUseFiltered(true);
-      })
-      .catch((err) => console.error("Error in filtering flow:", err));
-  };
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setFilteredProducts(data.results || data);
+  //       setUseFiltered(true);
+  //     })
+  //     .catch((err) => console.error("Error in filtering flow:", err));
+  // };
 
   const [suggestions, setSuggestions] = useState([]);
 
@@ -197,6 +195,7 @@ const ProductGrid = () => {
 
     const handleSearch = async () => {
       setLoading(true);
+      setResult(null);
       try {
         const response = await fetch('http://127.0.0.1:8000/audio/search', {
           method: 'POST',
@@ -217,9 +216,14 @@ const ProductGrid = () => {
 
     return (
       <div className="audioSearch">
-        <button style={{ color: loading ? 'black' : 'grey' }} className="btn-microphone" onClick={handleSearch}>  <FaMicrophone size={24} /></button>
-        {loading && <p>Recording and transcribing...</p>}
-        {result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
+        <button style={{ color: loading ? 'black' : 'grey' }} className="btn-microphone" onClick={handleSearch}>  
+          <FaMicrophone size={24} /></button>
+        <div className="audioSearch-loading">
+          {loading && <h6>Recording and transcribing...</h6>}
+          {loading && <button style={{ color: 'red', background: 'none', border: 'none', fontSize: '18px' }} onClick={() => 
+            { setLoading(false); }}>  <FiX /></button>}
+        </div>
+        {loading && result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
         {/* {result && (
           <div>
             <p><strong>Transcription:</strong> {result.transcription}</p>
@@ -318,7 +322,8 @@ const ProductGrid = () => {
           }}
         />
         {search && (
-          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); setSearchHistory([]); setSuggestions([]); }} className="clear-button">
+          <button onClick={() => { setSearch(""); setCorrectText(""); setFullStringSearch(""); 
+          setSearchHistory([]); setSuggestions([]); }} className="clear-button">
             <FiX />
           </button>
         )}
@@ -431,4 +436,4 @@ const ProductGrid = () => {
   );
 };
 
-export default ProductGrid;
+export default ProductSearch;

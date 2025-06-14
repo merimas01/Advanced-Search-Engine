@@ -4,7 +4,6 @@ import "./index.css";
 
 
 function App(){
-  // return <div><ProductGrid /></div>
   return <div> <AppRoutes /> </div>
 }
 

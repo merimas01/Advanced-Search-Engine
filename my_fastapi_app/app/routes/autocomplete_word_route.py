@@ -1,13 +1,11 @@
 from collections import Counter, defaultdict
 from typing import List
-
 import torch
 from fastapi import APIRouter, Depends, HTTPException
 from nltk.util import ngrams
 from pydantic import BaseModel
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from sqlalchemy.orm import Session
-
 from app.db.database import get_db
 from app.models.generated_models import Product, ProductBrand, ProductColor, ProductLabel, SubCategory
 
@@ -27,26 +25,23 @@ def score_completion(prompt: str, candidate: str) -> float:
     return outputs.loss.item()
 
 
-# Request and Response Schemas
+class Suggestion(BaseModel):
+    suggestion: str
+    gpt2_loss: float
+    
+# Request model
 class SuggestRequest(BaseModel):
     prompt: str
     top_k: int = 5
 
-
-class Suggestion(BaseModel):
-    suggestion: str
-    gpt2_loss: float
-
-
+# Response model
 class SuggestResponse(BaseModel):
     prompt: str
     suggestions: List[Suggestion]
+    
 
-
-@router.post("/gpt2-suggestions", response_model=SuggestResponse)
-def get_gpt2_suggestions(request: SuggestRequest, db: Session = Depends(get_db)):
-    # Step 1: Fetch product data
-    rows = (
+def load_data_from_db(db: Session):
+   return  (
         db.query(
             Product.ProductName,
             ProductBrand.BrandName,
@@ -60,6 +55,11 @@ def get_gpt2_suggestions(request: SuggestRequest, db: Session = Depends(get_db))
         .join(SubCategory, Product.SubCategoryID == SubCategory.SubCategoryID, isouter=True)
         .all()
     )
+
+@router.post("/gpt2-suggestions", response_model=SuggestResponse)
+def get_gpt2_suggestions(request: SuggestRequest, db: Session = Depends(get_db)):
+    # Step 1: Fetch data
+    rows = load_data_from_db(db)
 
     if not rows:
         raise HTTPException(status_code=404, detail="No product data found.")

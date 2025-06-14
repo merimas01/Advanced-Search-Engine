@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import "./Grid.css";
+import "./Style.css";
 
-function ResultsProducts() {
+function SearchResults() {
     const { search } = useParams();
     const [filteredProducts, setFilteredProducts] = useState([]);
     const totalPages = 2; //top_k/items_per_page
@@ -166,4 +166,4 @@ function ResultsProducts() {
     </>;
 }
 
-export default ResultsProducts;
+export default SearchResults;
