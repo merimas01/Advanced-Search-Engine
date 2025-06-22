@@ -1,9 +1,8 @@
 import math
+import torch
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
+from sentence_transformers import SentenceTransformer, util
 from sqlmodel import Session
 from app.models.generated_models import Product, ProductBrand, ProductColor, ProductDepartment, ProductLabel, SubCategory
 from app.db.database import get_db, SessionLocal
@@ -14,12 +13,10 @@ router = APIRouter()
 
 # Global variables
 model = None
-index = None
-products_metadata = []  # Holds [{"id": ProductID, "caption": ProductCaption}]
+embeddings = None
+products_metadata = []  # Holds [{"id": int, "caption": string}]
 
-
-# Step 1: Load ProductID and other objects from database
-
+# Step 1: Load ProductID and captions
 def load_products_from_db(db: Session):
     records = (
         db.query(
@@ -47,10 +44,11 @@ def load_products_from_db(db: Session):
         }
         for row in records
     ]
-# Step 2: Initialize model and FAISS index at startup
+
+# Step 2: Initialize model and compute embeddings
 @router.on_event("startup")
 def on_startup():
-    global model, index, products_metadata
+    global model, embeddings, products_metadata
 
     db = SessionLocal()
     try:
@@ -60,20 +58,14 @@ def on_startup():
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
     captions = [item["caption"] for item in products_metadata]
-    embeddings = model.encode(captions)
+    embeddings = model.encode(captions, convert_to_tensor=True, normalize_embeddings=True)
 
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(np.array(embeddings))
-
-
-# Step 3: Define request and response schemas
+# Step 3: Define schemas
 class SearchRequest(BaseModel):
     query: str
-    top_k: int = 20  # Default: return top_k results
+    top_k: int = 20
     page: int = 1
     items_per_page: int = 10
-
 
 class SearchResult(BaseModel):
     results: list[ProductOut]
@@ -82,8 +74,6 @@ class SearchResult(BaseModel):
     totalPages: int
     totalCount: int
 
-
-# Helper function to paginate items
 def paginate(items: list, page: int, page_size: int):
     total_items = len(items)
     total_pages = (total_items + page_size - 1) // page_size
@@ -98,26 +88,26 @@ def paginate(items: list, page: int, page_size: int):
         "total_pages": total_pages,
     }
 
-
-# Step 4: Define semantic search route
+# Step 4: Semantic search using cosine similarity
 @router.post("/semantic-search", response_model=SearchResult)
 def semantic_search(request: SearchRequest, db: Session = Depends(get_db)):
-    query_embedding = model.encode([request.query])
-    distances, indices = index.search(np.array(query_embedding), k=request.top_k)
+    query_embedding = model.encode(request.query, convert_to_tensor=True, normalize_embeddings=True)
 
-    matched = [products_metadata[idx] for idx in indices[0]]
-    #matched_ids = [item["id"] for item in matched]
-
-    matched_ids = list(dict.fromkeys(item["id"] for item in matched))
+    # Compute cosine similarity between query and all product captions
+    cosine_scores = util.cos_sim(query_embedding, embeddings)[0]  
+    print(cosine_scores)
     
-    # Fetch Products from database by matched IDs
-    products = db.query(Product).filter(Product.ProductID.in_(matched_ids)).all()
+    # Sort by similarity score
+    top_results = torch.topk(cosine_scores, k=request.top_k)
+    top_indices = top_results.indices.cpu().numpy().tolist()
 
-    # Reorder products to match search order
+    matched_ids = [products_metadata[i]["id"] for i in top_indices]
+
+    # Fetch Products by ID
+    products = db.query(Product).filter(Product.ProductID.in_(matched_ids)).all()
     id_to_product = {product.ProductID: product for product in products}
-    ordered_products = [
-        id_to_product[pid] for pid in matched_ids if pid in id_to_product
-    ]
+
+    ordered_products = [id_to_product[pid] for pid in matched_ids if pid in id_to_product]
 
     paginated = paginate(ordered_products, request.page, request.items_per_page)
 
@@ -125,6 +115,6 @@ def semantic_search(request: SearchRequest, db: Session = Depends(get_db)):
         results=[ProductOut.model_validate(p) for p in paginated["items"]],
         currentPage=paginated["page"],
         itemsPerPage=paginated["page_size"],
-        totalPages= math.ceil(request.top_k/request.items_per_page),
+        totalPages=math.ceil(request.top_k / request.items_per_page),
         totalCount=len(ordered_products)
     )
