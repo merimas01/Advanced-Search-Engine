@@ -166,7 +166,7 @@ const ProductSearch = () => {
         setCorrectText(data.corrected_text);
         console.log("correct text", correctText);
 
-        return fetch("http://127.0.0.1:8000/gpt2-suggestions", {
+        return fetch("http://127.0.0.1:8000/gpt4-suggestions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
