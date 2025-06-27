@@ -7,18 +7,19 @@ AdvancedSearchEngine is a project for my Bachelor thesis that uses AI and ML too
 It consists of:
 - autocompletion  - offering the potential next words for user's input even if it's misspelled
 - spell correction - correcting misspelling and understanding what user wanted to write
-- search history - displaying user's history and enabling him to use it while searching
-- audio search - seaching using own voice 
-- multiword search - enabling user to input multiple words and search products 
+- search history - displaying user's history and enabling him to use it while searching data
+- audio search - seaching data using own voice 
+- semantic search - enabling user to search data with multiple words, synonyms, abbreviations, misspelled words or incorrect word order
 
 The goals of this project:
 - to easily understand what user really wants to search and to provide him the most accurate results 
-- to simplify and speed up searching by suggesting next words, showing search history, correcting spelling, using voice...
+- to simplify and speed up searching by suggesting next words, showing search history, correcting spelling, using voice etc
 - to satisfy all users (some users will use search box, some will use voice, it's up to their preference)
 - to create the search-engine-pattern that could be used in different apps
+- to improve the User Experience
 
-This project is made with FastAPI for the backend and ReactJs for the frondend (web app). 
-The database is created and managed in SqlServer. 
+This project is made with FastAPI for the backend application and ReactJs+Vite for the frondend application. 
+The database is created and managed in Sql Server Management Studio. 
 
 ## Prerequisites
 
