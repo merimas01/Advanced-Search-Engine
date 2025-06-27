@@ -26,9 +26,9 @@ The database is created and managed in SqlServer.
 - Python Installed (version: 3.11.8)
 - Sql Server Management Studio
 - Node.js installed (version: v22.14.0)
-- set values to API_KEY (set your value), DATABASE_SERVER (set your value), DATABASE_NAME ("AdvancedSearchEngine"), DATABASE_USERNAME (set your value) and DATABASE_PASSWORD (set your value) in Environment Variables and then restart the computer
+- set values in Environment Variables to API_KEY (set your value), DATABASE_SERVER (set your value), DATABASE_NAME ("AdvancedSearchEngine"), DATABASE_USERNAME (set your value) and DATABASE_PASSWORD (set your value). Then restart the computer
 
-## Setting up 
+## Backend Web App and Database
 
 - Clone the repository: https://github.com/merimas01/Advanced-Search-Engine.git 
 - Open terminal in the *my_fastapi_app* directory 
@@ -41,7 +41,7 @@ The database is created and managed in SqlServer.
 - Wait until startup completes
 - Open Swagger at http://127.0.0.1:8000/docs
 
-## Web application
+## Frontend Web App
 
 - Open terminal in the *my-app* directory
 ![reactapp](https://github.com/user-attachments/assets/c9d92cb6-416b-4e18-8c01-0cf89e386a98)
