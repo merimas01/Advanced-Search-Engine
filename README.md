@@ -23,9 +23,10 @@ The database is created and managed in SqlServer.
 ## Prerequisites
 
 - Visual Studio Code installed
-- Python Installed (version: 3.13.3)
+- Python Installed (version: 3.11.8)
 - Sql Server Management Studio
 - Node.js installed (version: v22.14.0)
+- set values to API_KEY (set your value), DATABASE_SERVER (set your value), DATABASE_NAME ("AdvancedSearchEngine"), DATABASE_USERNAME (set your value) and DATABASE_PASSWORD (set your value) in Environment Variables and then restart the computer
 
 ## Setting up 
 
@@ -35,7 +36,6 @@ The database is created and managed in SqlServer.
 - Run a following command to install dependencies: *pip install -r dependencies.txt*
 - Connect to a SQL Server with your credentials
 - Execute an ***advanced_search_engine_database.sql*** script to create a database
-- Modify the credentials (username, password) inside the ***db/database.py*** file 
 - Run a ***data_seed.py*** script to generate test data 
 - Run a following command to start the application:  *python -m uvicorn app.main:app --reload*
 - Wait until startup completes
