@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Style.css";
 import { FiX } from "react-icons/fi";
 import { FaMicrophone } from 'react-icons/fa';
@@ -100,29 +100,6 @@ const ProductSearch = () => {
       .catch((err) => console.error("Error in filtering flow:", err));
   }
 
-  // const fetchSpeechRecognitionProducts = (transcript, page = 1) => {
-
-  //   return fetch("http://127.0.0.1:8000/semantic-search", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       query: transcript,
-  //       top_k: 20,
-  //       page: page,
-  //       items_per_page: 10,
-  //     }),
-  //   })
-
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setFilteredProducts(data.results || data);
-  //       setUseFiltered(true);
-  //     })
-  //     .catch((err) => console.error("Error in filtering flow:", err));
-  // };
-
   const [suggestions, setSuggestions] = useState([]);
 
   const handleSearchChange = (e) => {
@@ -188,98 +165,87 @@ const ProductSearch = () => {
   };
 
 
+const AudioSearch = () => {
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const controllerRef = useRef(null); // to store AbortController
 
-  const AudioSearch = () => {
-    const [result, setResult] = useState(null);
-    const [loading, setLoading] = useState(false);
+  const handleSearch = async () => {
+    setLoading(true);
+    setResult(null);
+    
+    const controller = new AbortController();
+    controllerRef.current = controller;
 
-    const handleSearch = async () => {
-      setLoading(true);
-      setResult(null);
-      try {
-        const response = await fetch('http://127.0.0.1:8000/audio/search', {
-          method: 'POST',
-        });
+    try {
+      const response = await fetch('http://127.0.0.1:8000/audio/search', {
+        method: 'POST',
+        signal: controller.signal,
+      });
 
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setResult(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error calling audio search:", error);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
       }
-    };
 
-    return (
-      <div className="audioSearch">
-        <button style={{ color: loading ? 'black' : 'grey' }} className="btn-microphone" onClick={handleSearch}>  
-          <FaMicrophone size={24} /></button>
-        <div className="audioSearch-loading">
-          {loading && <h6>Recording and transcribing...</h6>}
-          {loading && <button style={{ color: 'red', background: 'none', border: 'none', fontSize: '18px' }} onClick={() => 
-            { setLoading(false); }}>  <FiX /></button>}
-        </div>
-        {loading==false && result && result.transcription != ". ." ? spellCorrection(result.transcription) : <p></p>}
-        {/* {result && (
-          <div>
-            <p><strong>Transcription:</strong> {result.transcription}</p>
-            <p><strong>Keywords Found:</strong> {result.keywords_found.join(', ')}</p>
-          </div>
-        )} */}
-      </div>
-    );
+      const data = await response.json();
+      setResult(data);
+      console.log(data);
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log("Fetch aborted.");
+      } else {
+        console.error("Error calling audio search:", error);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // const SpeechRecognizer = () => {
-  //   const [transcript, setTranscript] = useState("");
-  //   const [listening, setListening] = useState(false);
+  const cancelSearch = () => {
+    if (controllerRef.current) {
+      controllerRef.current.abort(); // cancels the fetch
+    }
+    setLoading(false);
+    setResult(null);
+  };
 
-  //   const startListening = () => {
-  //     const SpeechRecognition =
-  //       window.SpeechRecognition || window.webkitSpeechRecognition;
+  return (
+    <div className="audioSearch">
+      <button
+        style={{ color: loading ? 'black' : 'grey' }}
+        className="btn-microphone"
+        onClick={handleSearch}
+        disabled={loading}
+      >
+        <FaMicrophone size={24} />
+      </button>
 
-  //     if (!SpeechRecognition) {
-  //       alert("Your browser does not support Speech Recognition");
-  //       return;
-  //     }
-  //     const recognition = new SpeechRecognition();
-  //     recognition.lang = "en-US";
-  //     recognition.interimResults = false;
-  //     recognition.maxAlternatives = 1;
+      <div className="audioSearch-loading">
+        {loading && <h6>Recording and transcribing...</h6>}
+        {loading && (
+          <button
+            style={{
+              color: 'red',
+              background: 'none',
+              border: 'none',
+              fontSize: '18px',
+            }}
+            onClick={cancelSearch}
+          >
+            <FiX />
+          </button>
+        )}
+      </div>
 
-  //     recognition.onresult = (event) => {
-  //       const speechResult = event.results[0][0].transcript;
-  //       setTranscript(speechResult);
-  //       console.log("Recognized:", speechResult);
-  //     };
+      {!loading && result !== null && result.transcription !== ". ." ? (
+        spellCorrection(result.transcription)
+      ) : (
+        <p></p>
+      )}
+    </div>
+  );
+};
 
-  //     recognition.onerror = (event) => {
-  //       console.error("Speech recognition error", event.error);
-  //     };
-
-  //     recognition.onend = () => {
-  //       setListening(false);
-  //     };
-
-  //     recognition.start();
-  //     setListening(true);
-  //   };
-
-  //   return (
-  //     <div>
-  //       <button onClick={startListening} disabled={listening}>
-  //         {listening ? "Listening..." : "Start Listening"}
-  //       </button>
-  //       <p>Transcript: {transcript}</p>
-  //       {transcript && <button onClick={(e) => { setSearch(transcript); fetchSpeechRecognitionProducts(transcript, 1); setCorrectText(""); }} >Filter data</button>}
-  //     </div>
-  //   );
-  // }
 
   useEffect(() => {
     // initial load

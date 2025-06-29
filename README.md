@@ -2,7 +2,7 @@
 
 ## About the project
 
-AdvancedSearchEngine is a project for my Bachelor thesis that uses AI and ML techniques Deep learning and Natural Language Processing. It demonstrates how an advanced search engine works and how it is such an important part of every app with a large amount of data. 
+AdvancedSearchEngine is a project for my Bachelor thesis that uses AI and ML techniques - Natural Language Processing and Deep Learning. It demonstrates how an advanced search engine works and how it is such an important part of every app with a large amount of data. 
 
 It consists of:
 - autocompletion  - offering the potential next words for user's input even if it's misspelled
