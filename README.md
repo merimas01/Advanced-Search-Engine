@@ -2,14 +2,14 @@
 
 ## About the project
 
-AdvancedSearchEngine is a project for my Bachelor thesis that uses AI and ML tools. It demonstrates how an advanced search engine works and how it is such an important part of every app with a large amount of data. 
+AdvancedSearchEngine is a project for my Bachelor thesis that uses AI and ML techniques Deep learning and Natural Language Processing. It demonstrates how an advanced search engine works and how it is such an important part of every app with a large amount of data. 
 
 It consists of:
 - autocompletion  - offering the potential next words for user's input even if it's misspelled
 - spell correction - correcting misspelling and understanding what user wanted to write
 - search history - displaying user's history and enabling him to use it while searching data
 - audio search - seaching data using own voice 
-- semantic search - enabling user to search data with multiple words, synonyms, abbreviations, misspelled words or incorrect word order
+- semantic search - enabling user to search data with sentences, synonyms, abbreviations, misspelled words or incorrect word order
 
 The goals of this project:
 - to easily understand what user really wants to search and to provide him the most accurate results 
@@ -27,7 +27,7 @@ The database is created and managed in Sql Server Management Studio.
 - Python Installed (version: 3.11.8)
 - Sql Server Management Studio
 - Node.js installed (version: v22.14.0)
-- set values in Environment Variables to API_KEY (set your value), DATABASE_SERVER (set your value), DATABASE_NAME ("AdvancedSearchEngine"), DATABASE_USERNAME (set your value) and DATABASE_PASSWORD (set your value). Then restart the computer
+- set values in Environment Variables to API_KEY (set your value), DATABASE_SERVER (set your value), DATABASE_NAME ("AdvancedSearchEngine"), DATABASE_USERNAME (set your value) and DATABASE_PASSWORD (set your value). Then restart your computer
 
 ## Backend Web App and Database
 
