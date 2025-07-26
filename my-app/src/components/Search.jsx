@@ -316,7 +316,7 @@ const AudioSearch = () => {
                 }}>
                   🕒 {obj.SearchInput}
                   <button
-                    onClick={(e) => {   e.stopPropagation(); handleDeleteSearchItem(obj.SearchHistoryID)}}
+                    onClick={() => handleDeleteSearchItem(obj.SearchHistoryID)}
                     className="delete-btn"
                   >
                     &#x2715;
