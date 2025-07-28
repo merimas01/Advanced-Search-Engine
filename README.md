@@ -32,8 +32,8 @@ The database is created and managed in Sql Server Management Studio.
 ## Backend Web App and Database
 
 - Clone the repository: https://github.com/merimas01/Advanced-Search-Engine.git 
-- Open terminal in the *my_fastapi_app* directory 
-![fastapiapp](https://github.com/user-attachments/assets/ee8e6487-400c-4e61-810d-2fcf800dda35)
+- Open terminal in the *my_fastapi_app* directory (command prompt)
+- Run a following command to change the environment to the virtual environment: *venv\Scripts\activate*
 - Run a following command to install dependencies: *pip install -r dependencies.txt*
 - Connect to a SQL Server with your credentials
 - Execute an ***advanced_search_engine_database.sql*** script to create a database
@@ -44,8 +44,7 @@ The database is created and managed in Sql Server Management Studio.
 
 ## Frontend Web App
 
-- Open terminal in the *my-app* directory
-![reactapp](https://github.com/user-attachments/assets/c9d92cb6-416b-4e18-8c01-0cf89e386a98)
+- Open terminal in the *my-app* directory (command promt)
 - Run following commands:
   - npm install
   - npm run dev
